@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="Description" content=""/>
+    <link rel="shortcut icon" href=""/>
+    <!--[if IE]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--
+    <link href="css/style.css" rel="stylesheet"/>
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <h1>ChatGPT saving Conversation <a href="https://en.wikipedia.org/wiki/Bookmarklet">Bookmarklet</a></h1>
+  <p>Drag this link to your bookmarks <a id="bookmark">Save ChatGPT</a></p>
+  <p>Below are few examples:</p>
+  <ul>
+    <li><a href="./12-2022/what-is-programming.html">Explain what is programming like I'm 5</a> (12-2022)</li>
+  </ul>
+  <script>
+  fetch('https://cdn.jsdelivr.net/gh/jcubic/chat-gpt/bookmark.js')
+    .then(res => res.text())
+    .then(text => bookmark.href = text);
+  </script>
+</body>
+</html>
