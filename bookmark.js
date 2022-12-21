@@ -3,6 +3,7 @@ javascript:(function() {
   a.href = URL.createObjectURL(new Blob([`<!DOCTYPE html><html><head><style>
 [class^="react-scroll-to-bottom"] > .flex > div:nth-child(2n+1) {
     background: lightgray;
+    white-space: pre;
 }
 [class^="react-scroll-to-bottom"] > .flex > div:nth-child(2n+2) {
     background: darkgray;
