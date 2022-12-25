@@ -1,19 +1,29 @@
 javascript:(function() {
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([`<!DOCTYPE html><html><head><style>
+  const dom = document.querySelector('main > .flex-1 > .h-full .flex:has(> .w-full)');
+  const template = document.createElement('template');
+  template.innerHTML = dom.innerHTML;
+  ['.items-end', 'img', 'svg', 'button', ':empty'].forEach(selector => {
+    template.content.querySelectorAll(selector).forEach(node => {
+      node.remove();
+    });
+  });
+  a.href = URL.createObjectURL(new Blob([`<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat GPT Conversation</title>
+  <meta name="generator" content="chatGPT Saving Bookmark"/>
+<style>
 body > .w-full:nth-child(2n+1) {
     background: lightgray;
 }
 body > .w-full:nth-child(2n+2) {
     background: darkgray;
 }
-body > .w-full:not(:last-child) {
+body > .w-full {
     padding: 10px;
     margin: 10px;
     border-radius: 5px;
-}
-body > .w-full .relative.flex:first-child {
-  display: none !important;
 }
 p:first-child {
   margin-top: 0;
@@ -25,10 +35,7 @@ p:last-child {
 <link rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
 </head>
-<body>`+ document.querySelector('main > .flex-1 > .h-full .flex:has(> .w-full)').innerHTML
-  .replace(/<img[^>]*>/g, '')
-  .replace(/<button[^>]*>.*?<\/button>/g, '')
-  .replace(/<svg[^>]*>.*?<\/svg>/g, '') + '</body></html>'], {type: 'text/html'}));
+<body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
   a.download = 'chatGPT.html';
   document.body.appendChild(a);
   a.click();
