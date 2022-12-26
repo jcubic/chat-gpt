@@ -25,6 +25,9 @@ body > .w-full {
     margin: 10px;
     border-radius: 5px;
 }
+.whitespace-pre-wrap {
+    white-space: pre-wrap;
+}
 p:first-child {
   margin-top: 0;
 }
