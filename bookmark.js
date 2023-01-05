@@ -39,7 +39,7 @@ p:last-child {
       href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
 </head>
 <body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
-  a.download = 'chatGPT.html';
+  a.download = document.querySelector("a.flex.pr-14 div").innerHTML.split("<")[0] + '.html';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
