@@ -19,7 +19,7 @@ body {
     background-color: rgb(32,33,35);
     color: rgb(236,236,241);
     font-size: 16px;
-    font-family: Söhne,ui-sans-serif,system-ui,-apple-system,sans-serif,Helvetica Neue,Arial,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+    font-family: sans-serif;
     line-height: 28px;
     margin: -10px;
 }
@@ -45,7 +45,9 @@ body > .w-full:nth-child(2n+2) {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
 </head>
 <body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
-  a.download = title.replace(/[^a-z0-9]/gi, '_') + '.html';
+  const reg1 = /[^\p{L}\p{N}]+/gu;
+  const reg2 = /(^-)|(-$)/g
+  a.download = title.toLowerCase().replace(reg1, "-").replace(reg2, '') + '.html';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
