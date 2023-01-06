@@ -46,7 +46,7 @@ body > .w-full:nth-child(2n+2) {
 </head>
 <body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
   const reg1 = /[^\p{L}\p{N}]+/gu;
-  const reg2 = /(^-)|(-$)/g
+  const reg2 = /(^-)|(-$)/g;
   a.download = title.toLowerCase().replace(reg1, "-").replace(reg2, '') + '.html';
   document.body.appendChild(a);
   a.click();
