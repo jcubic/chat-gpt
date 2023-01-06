@@ -8,5 +8,5 @@ when OpenAI change their application.
 If you want to add something to the boomark, please do. Also if the code doesn't work please add issue.
 
 ## License
-Copyright 2022 [Jakub T. Jankiewicz](https://jakub.jankiewicz.org/)<br/>
+Copyright 2022-2023 [Jakub T. Jankiewicz](https://jakub.jankiewicz.org/)<br/>
 Released under GNU GPL v3 or later
