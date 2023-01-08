@@ -1,7 +1,7 @@
 javascript:(function() {
   try {
     const a = document.createElement('a');
-    const dom = document.querySelector('main > .flex-1 > .h-full .flex:has(> .w-full)');
+    const dom = document.querySelector('main > .flex-1 > .h-full .flex');
     const template = document.createElement('template');
     const title = document.title;
     template.innerHTML = dom.innerHTML;
@@ -58,4 +58,4 @@ body > .w-full:nth-child(2n+2) {
   } catch(e) {
     alert(e.message);
   }
-})()
+})();
