@@ -17,30 +17,33 @@ javascript:(function() {
   <meta name="generator" content="chatGPT Saving Bookmark"/>
 <style>
 body {
-    background-color: rgb(32,33,35);
-    color: rgb(236,236,241);
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 28px;
-    margin: -10px;
+  background-color: rgb(32,33,35);
+  color: rgb(236,236,241);
+  font-size: 16px;
+  font-family: sans-serif;
+  line-height: 28px;
+  margin: -10px;
 }
 body > .w-full {
-    padding: 30px;
+  padding: 30px;
 }
 /* prompt */
 body > .w-full:nth-child(2n+1) {
-    background: rgb(52,53,65);
+  background: rgb(52,53,65);
 }
 /* response */
 body > .w-full:nth-child(2n+2) {
-    background: rgb(68,70,84);
+  background: rgb(68,70,84);
+}
+a, a:visited {
+  color: #7792cd;
 }
 .whitespace-pre-wrap {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 .flex-col {
-    max-width: 850px;
-    margin: 0px auto;
+  max-width: 850px;
+  margin: 0px auto;
 }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
