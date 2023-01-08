@@ -46,9 +46,11 @@ body > .w-full:nth-child(2n+2) {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
 </head>
 <body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
-    const reg1 = /[^\p{L}\p{N}]+/gu;
-    const reg2 = /(^-)|(-$)/g;
-    a.download = title.toLowerCase().replace(reg1, "-").replace(reg2, '') + '.html';
+    const non_letters_re = /[^\p{L}\p{N}]+/gu;
+    const trailing_dash_re = /(^-)|(-$)/g;
+    a.download = title.toLowerCase()
+      .replace(non_letters_re, "-")
+      .replace(trailing_dash_re, '') + '.html';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
