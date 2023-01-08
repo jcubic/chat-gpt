@@ -38,6 +38,15 @@ body > .w-full:nth-child(2n+2) {
 a, a:visited {
   color: #7792cd;
 }
+pre {
+  margin: 0 0 1em 0;
+  display: inline-block;
+  width: 100%;
+}
+pre code.hljs {
+  margin-bottom: 1em;
+  border-radius: 5px;
+}
 .whitespace-pre-wrap {
   white-space: pre-wrap;
 }
