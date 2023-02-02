@@ -5,6 +5,11 @@ javascript:(function() {
     const template = document.createElement('template');
     const title = document.title;
     template.innerHTML = dom.innerHTML;
+    const cssLink = document.head.querySelector('link[rel="stylesheet"]').href;
+    let inlineCSS = "";
+    fetch(cssLink)
+    .then((response) => response.text()).then((css) => {inlineCSS = css;})
+    .then(() => {
     ['.items-end', 'img', 'svg', 'button', ':empty'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
         node.remove();
@@ -18,7 +23,6 @@ javascript:(function() {
 <style>
 body {
   background-color: rgb(32,33,35);
-  color: rgb(236,236,241);
   font-size: 16px;
   font-family: sans-serif;
   line-height: 28px;
@@ -29,11 +33,11 @@ body > .w-full {
 }
 /* prompt */
 body > .w-full:nth-child(2n+1) {
-  background: rgb(52,53,65);
+  background: rgb(219,219,232);
 }
 /* response */
 body > .w-full:nth-child(2n+2) {
-  background: rgb(68,70,84);
+  background: rgb(236,236,241);
 }
 a, a:visited {
   color: #7792cd;
@@ -54,8 +58,8 @@ pre code.hljs {
   max-width: 850px;
   margin: 0px auto;
 }
+${inlineCSS}
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
 </head>
 <body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
@@ -67,6 +71,7 @@ pre code.hljs {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
+    });
   } catch(e) {
     alert(e.message);
   }
