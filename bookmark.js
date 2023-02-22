@@ -13,6 +13,7 @@ javascript:(function() {
     a.href = URL.createObjectURL(new Blob([`<!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8"/>
   <title>Chat GPT: ${title}</title>
   <meta name="generator" content="chatGPT Saving Bookmark"/>
 <style>
