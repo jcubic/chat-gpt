@@ -23,7 +23,7 @@ body {
   font-size: 16px;
   font-family: sans-serif;
   line-height: 28px;
-  margin: -10px;
+  margin: 0;
 }
 body > .w-full {
   padding: 30px;
