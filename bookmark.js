@@ -61,7 +61,7 @@ pre code.hljs {
 <body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
     const trailing_dash_re = /(^-)|(-$)/g;
-    a.download = title.toLowerCase()
+    a.download = 'chat-gpt-' + title.toLowerCase()
       .replace(non_letters_re, "-")
       .replace(trailing_dash_re, '') + '.html';
     document.body.appendChild(a);
