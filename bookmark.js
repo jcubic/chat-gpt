@@ -4,6 +4,9 @@ javascript:(function() {
     const dom = document.querySelector('main > .flex-1 > .h-full .flex');
     const template = document.createElement('template');
     const title = document.title;
+    const slug = title.toLowerCase()
+      .replace(non_letters_re, "-")
+      .replace(trailing_dash_re, '');
     template.innerHTML = dom.innerHTML;
     ['.items-end', 'img', 'svg', 'button', ':empty'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
@@ -61,9 +64,7 @@ pre code.hljs {
 <body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
     const trailing_dash_re = /(^-)|(-$)/g;
-    a.download = 'chat-gpt-' + title.toLowerCase()
-      .replace(non_letters_re, "-")
-      .replace(trailing_dash_re, '') + '.html';
+    a.download = `chat-gpt-${slug}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
