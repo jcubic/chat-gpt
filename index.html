@@ -21,9 +21,20 @@
     <li><a href="./12-2022/what-is-programming.html">Explain what is programming like I'm 5</a> (12-2022)</li>
   </ul>
   <script>
-  fetch('https://cdn.jsdelivr.net/gh/jcubic/chat-gpt/bookmark.js')
-    .then(res => res.text())
-    .then(text => bookmark.href = text);
+   async function hash(branch) {
+       try {
+           var url = `https://api.github.com/repos/jcubic/chat-gpt/commits?sha=${branch}`;
+           var res = await fetch(url);
+           var data = await res.json();
+           return data[0].sha;
+       } catch (e) {
+           return branch;
+       }
+   }
+   hash('master').then(hash => {
+       return fetch(`https://cdn.jsdelivr.net/gh/jcubic/chat-gpt@${hash}/bookmark.js`);
+   }).then(res => res.text())
+     .then(text => bookmark.href = text);
   </script>
 </body>
 </html>
