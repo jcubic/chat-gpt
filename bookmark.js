@@ -4,6 +4,8 @@ javascript:(function() {
     const dom = document.querySelector('main > .flex-1 > .h-full .flex');
     const template = document.createElement('template');
     const title = document.title;
+    const non_letters_re = /[^\p{L}\p{N}]+/gu;
+    const trailing_dash_re = /(^-)|(-$)/g;
     const slug = title.toLowerCase()
       .replace(non_letters_re, "-")
       .replace(trailing_dash_re, '');
@@ -61,9 +63,7 @@ pre code.hljs {
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
 </head>
-<body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
-    const non_letters_re = /[^\p{L}\p{N}]+/gu;
-    const trailing_dash_re = /(^-)|(-$)/g;
+<body>${template.innerHTML}</body></html>`], {type: 'text/html'}))
     a.download = `chat-gpt-${slug}.html`;
     document.body.appendChild(a);
     a.click();
