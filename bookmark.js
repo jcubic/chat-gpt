@@ -63,7 +63,7 @@ pre code.hljs {
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
 </head>
-<body>${template.innerHTML}</body></html>`], {type: 'text/html'}))
+<body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
     a.download = `chat-gpt-${slug}.html`;
     document.body.appendChild(a);
     a.click();
