@@ -60,6 +60,50 @@ pre code.hljs {
   max-width: 850px;
   margin: 0px auto;
 }
+*, :after, :before {
+    border: 0 solid #d9d9e3;
+    box-sizing: border-box;
+}
+table {
+    border-collapse: collapse;
+    border-color: inherit;
+    text-indent: 0;
+}
+.markdown table {
+    --tw-border-spacing-x: 0px;
+    --tw-border-spacing-y: 0px;
+    border-collapse: separate;
+    border-spacing: var(--tw-border-spacing-x) var(--tw-border-spacing-y);
+    width: 100%
+}
+.markdown th {
+    background-color: rgba(236,236,241,.2);
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    padding: .25rem .75rem
+}
+.markdown th:first-child {
+    border-top-left-radius: .375rem
+}
+.markdown th:last-child {
+    border-right-width: 1px;
+    border-top-right-radius: .375rem
+}
+.markdown td {
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    padding: .25rem .75rem
+}
+.markdown td:last-child {
+    border-right-width: 1px
+}
+.markdown tbody tr:last-child td:first-child {
+    border-bottom-left-radius: .375rem
+}
+.markdown tbody tr:last-child td:last-child {
+    border-bottom-right-radius: .375rem
+}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
 </head>
