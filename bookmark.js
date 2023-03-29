@@ -12,7 +12,9 @@ javascript:(function() {
     template.innerHTML = dom.innerHTML;
     ['.items-end', 'img', 'svg', 'button', ':empty'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
-        node.remove();
+        if (!node.closest('.math')) {
+          node.remove();
+        }
       });
     });
     a.href = URL.createObjectURL(new Blob([`<!DOCTYPE html>
@@ -106,6 +108,7 @@ table {
 }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"/>
 </head>
 <body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
     a.download = `chat-gpt-${slug}.html`;
