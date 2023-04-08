@@ -9,7 +9,7 @@ Bookmarklet is a JavaScript code that run as URL from your bookmarks. To run the
 to create new Bookmark and copy the code from the JavaScript file. If you don't know how you can
 open the [website](https://jcubic.github.io/chat-gpt/) and drag & drop the look to your bookmarks.
 
-You can read more about [Bookrmarklets on Wikipedia](https://en.wikipedia.org/wiki/Bookmarklet).
+You can read more about [Bookmarklets on Wikipedia](https://en.wikipedia.org/wiki/Bookmarklet).
 
 ## Interesting projects
 The main reason for this project is to allow to save the chatGPT conversation as files on the disk.
