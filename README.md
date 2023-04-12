@@ -1,5 +1,6 @@
-# chat-gpt
-This is ChatGPT conversation saving bookmark.
+# chatGPT
+[ChatGPT conversation saving bookmark](https://github.com/jcubic/chat-gpt).
+
 It's started as [DEV.to article](https://dev.to/jcubic/save-chatgpt-as-html-file-dhh).
 But I've decided that It would be better to track it on GitHub and update so it will still work,
 when OpenAI change their application.
