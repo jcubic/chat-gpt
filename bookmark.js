@@ -4,6 +4,7 @@ javascript:(function() {
     const dom = document.querySelector('main > .flex-1 > .h-full .flex');
     const template = document.createElement('template');
     const user_image = dom.querySelector('.items-end img.rounded-sm');
+    user_image.removeAttribute('srcset');
     const avatar_url = base64_image(user_image);
     const title = document.title;
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
