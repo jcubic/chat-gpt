@@ -1,11 +1,10 @@
-javascript:(function() {
+javascript:(async function() {
   try {
     const a = document.createElement('a');
     const dom = document.querySelector('main > .flex-1 > .h-full .flex');
     const template = document.createElement('template');
     const user_image = dom.querySelector('.items-end img.rounded-sm');
-    user_image.removeAttribute('srcset');
-    const avatar_url = base64_image(user_image);
+    const avatar_data = await get_image_data(user_image);
     const title = document.title;
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
     const trailing_dash_re = /(^-)|(-$)/g;
@@ -22,8 +21,7 @@ javascript:(function() {
     });
     template.content.querySelectorAll('img').forEach(node => {
       node.setAttribute('alt', 'user avatar');
-      node.setAttribute('src', avatar_url);
-      ['srcset', 'style'].forEach(attr => {
+      ['srcset', 'style', 'src'].forEach(attr => {
         node.removeAttribute(attr);
       });
     });
@@ -236,7 +234,20 @@ code.hljs, code[class*=language-], pre[class*=language-] {
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"/>
 </head>
-<body>${template.innerHTML}</body></html>`], {type: 'text/html'}));
+<body>${template.innerHTML}<script>
+function decode(array) {
+  const ua = new Uint8Array(array);
+  return URL.createObjectURL(new Blob([ua], {type : "image/jpeg"}));
+}
+const avatar_data = {
+  '1x': decode([${avatar_data['1x'].toString()}]),
+  '2x': decode([${avatar_data['2x'].toString()}])
+};
+document.querySelectorAll('img').forEach(img => {
+   img.src = avatar_data['2x'];
+   img.srcset = \`\${avatar_data['1x']} 1x, \${avatar_data['2x']} 2x\`;
+});
+</script></body></html>`], {type: 'text/html'}));
     a.download = `chat-gpt-${slug}.html`;
     document.body.appendChild(a);
     a.click();
@@ -251,12 +262,43 @@ code.hljs, code[class*=language-], pre[class*=language-] {
       node.matches('svg.h-6.w-6') ||
       node.matches('img[alt*="@"]')
   }
-  function base64_image(img) {
+  function canvas_to_array(canvas) {
+    return new Promise(resolve => {
+      canvas.toBlob(blob => {
+        blob.arrayBuffer().then(buffer => {
+          resolve(new Uint8Array(buffer));
+        });
+      }, "image/jpeg", 0.95);
+    });
+  }
+  function render_image(src, ctx) {
+    return new Promise(resolve => {
+      const image = new Image();
+      image.onload = function() {
+        ctx.canvas.width = image.width;
+        ctx.canvas.height = image.height;
+        ctx.drawImage(image, 0, 0);
+        resolve();
+      };
+      image.src = src;
+    });
+  }
+  async function get_image_data(img) {
     const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    return canvas.toDataURL('image/png');
+    const src = get_src(img);
+
+    const arr = await Promise.all(Object.entries(src).map(async ([scale, src]) => {
+      await render_image(src, ctx);
+      return [scale, await canvas_to_array(canvas)];
+    }));
+    return Object.fromEntries(arr);
+  }
+  function get_src(image) {
+    const m = image.srcset.match(/(.*)\s+1x,\s*(.*)2x/);
+    return {
+      '1x': m[1],
+      '2x': m[2]
+    };
   }
 })();
