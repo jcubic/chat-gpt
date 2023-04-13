@@ -53,6 +53,9 @@ body > .w-full {
 .text-base {
   max-width: 50rem;
 }
+.gap-4 {
+  gap: 1rem;
+}
 /* prompt */
 body > .w-full:nth-child(2n+1) {
   background: rgb(52,53,65);
