@@ -12,7 +12,7 @@ javascript:(async function() {
       .replace(non_letters_re, "-")
       .replace(trailing_dash_re, '');
     template.innerHTML = dom.innerHTML;
-    ['.items-end', 'img', 'svg', 'button', ':empty', '.items-end .text-xs'].forEach(selector => {
+    ['.items-end', 'img', 'svg', 'button', ':empty', '.rounded-full', '.items-end .text-xs'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
         if (!node.closest('.math') && !is_avatar(node)) {
           node.remove();
@@ -230,6 +230,31 @@ code.hljs, code[class*=language-], pre[class*=language-] {
 }
 .overflow-y-auto {
   overflow-y: auto;
+}
+/* style of the warnings */
+.text-sm {
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+.py-2 {
+  padding-bottom: .5rem;
+  padding-top: .5rem;
+}
+.px-3 {
+  padding-left: .75rem;
+  padding-right: .75rem;
+}
+.bg-orange-500/10 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(224,108,43,var(--tw-bg-opacity));
+}
+.border-orange-500 {
+  --tw-text-opacity: 1;
+  border-color: rgba(224,108,43,var(--tw-text-opacity));
+  color: rgba(224,108,43,var(--tw-text-opacity));
+}
+.border {
+  border-width: 1px;
 }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"/>
