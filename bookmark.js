@@ -286,6 +286,7 @@ document.querySelectorAll('img').forEach(img => {
   async function get_image_data(img) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
+    await force_load_image(img);
     const src = get_src(img);
 
     const arr = await Promise.all(Object.entries(src).map(async ([scale, src]) => {
@@ -300,5 +301,15 @@ document.querySelectorAll('img').forEach(img => {
       '1x': m[1],
       '2x': m[2]
     };
+  }
+  function force_load_image(image) {
+    return new Promise(resolve => {
+      if (image.srcset) {
+        resolve();
+      } else {
+        image.addEventListener('load', resolve, { once: true });
+        image.scrollIntoView();
+      }
+    }
   }
 })();
