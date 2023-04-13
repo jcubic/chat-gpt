@@ -310,6 +310,6 @@ document.querySelectorAll('img').forEach(img => {
         image.addEventListener('load', resolve, { once: true });
         image.scrollIntoView();
       }
-    }
+    })
   }
 })();
