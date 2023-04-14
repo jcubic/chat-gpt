@@ -307,9 +307,14 @@ document.querySelectorAll('img').forEach(img => {
       if (image.srcset) {
         resolve();
       } else {
-        image.addEventListener('load', resolve, { once: true });
+        const scroller = document.querySelector('[class^="react-scroll-to-bottom"]:not(.h-full)');
+        const scrollTop = scroller.scrollTop;
+        image.addEventListener('load', () => {
+          scroller.scrollTop = scrollTop;
+          resolve();
+        }, { once: true });
         image.scrollIntoView();
       }
-    }
+    });
   }
 })();
