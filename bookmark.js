@@ -5,6 +5,7 @@ javascript:(async function() {
     const template = document.createElement('template');
     const user_image = dom.querySelector('.items-end img.rounded-sm');
     const avatar_data = await get_image_data(user_image);
+    const is_dark_mode = document.documentElement.matches('.dark');
     const title = document.title;
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
     const trailing_dash_re = /(^-)|(-$)/g;
@@ -26,15 +27,21 @@ javascript:(async function() {
       });
     });
     a.href = URL.createObjectURL(new Blob([`<!DOCTYPE html>
-<html>
+<html class="${is_dark_mode ? 'dark' : 'light'}">
 <head>
   <meta charset="utf-8"/>
   <title>Chat GPT: ${title}</title>
   <meta name="generator" content="chatGPT Saving Bookmark"/>
 <style>
-body {
+html.dark {
   background-color: rgb(32,33,35);
   color: rgb(236,236,241);
+}
+html.light {
+  background-color: white;
+  color: rgb(52,53,65);
+}
+body {
   font-size: 16px;
   font-family: sans-serif;
   line-height: 28px;
@@ -54,12 +61,18 @@ body > .w-full {
   max-width: 50rem;
 }
 /* prompt */
-body > .w-full:nth-child(2n+1) {
+.dark body > .w-full:nth-child(2n+1) {
   background: rgb(52,53,65);
 }
 /* response */
-body > .w-full:nth-child(2n+2) {
+.dark body > .w-full:nth-child(2n+2) {
   background: rgb(68,70,84);
+}
+.light body > .w-full:nth-child(2n+2) {
+  background: rgb(247,247,248);
+}
+.light body > .w-full {
+  border-bottom: 1px solid rgba(0,0,0,.1);
 }
 a, a:visited {
   color: #7792cd;
@@ -173,16 +186,13 @@ body > .w-full:nth-child(2n+1) .items-end {
   line-height: 1rem;
 }
 .bg-black {
-  --tw-bg-opacity: 1;
-  background-color: rgba(0,0,0,var(--tw-bg-opacity));
+  background-color: rgb(0,0,0);
 }
 .text-gray-200 {
-  --tw-text-opacity: 1;
-  color: rgba(217,217,227,var(--tw-text-opacity));
+  color: rgb(217,217,227);
 }
 .bg-gray-800 {
-  --tw-bg-opacity: 1;
-  background-color: rgba(52,53,65,var(--tw-bg-opacity));
+  background-color: rgba(52,53,65);
 }
 .rounded-t-md {
   border-top-left-radius: 0.375rem;
@@ -234,10 +244,36 @@ code.hljs, code[class*=language-], pre[class*=language-] {
 .overflow-y-auto {
   overflow-y: auto;
 }
+.toggle {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 16px;
+  line-height: 1.2em;
+}
+#toggle {
+  display: none;
+}
+#toggle + label::before {
+  content: "☀️";
+  background: black;
+  display: block;
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  padding: 4px 3px;
+  border: 1px solid white;
+  border-radius: 50%;
+}
+#toggle:checked + label::before {
+  content: "🌙";
+}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"/>
 </head>
-<body>${template.innerHTML}<script>
+<body>${template.innerHTML}
+<div class="toggle"><input id="toggle" type="checkbox" /><label for="toggle"></label></div>
+<script>
 function decode(array) {
   const ua = new Uint8Array(array);
   return URL.createObjectURL(new Blob([ua], {type : "image/jpeg"}));
@@ -249,6 +285,10 @@ const avatar_data = {
 document.querySelectorAll('img').forEach(img => {
    img.src = avatar_data['2x'];
    img.srcset = \`\${avatar_data['1x']} 1x, \${avatar_data['2x']} 2x\`;
+});
+toggle.addEventListener('change', () => {
+    const className = toggle.checked ? 'dark' : 'light';
+    document.documentElement.className = className;
 });
 </script></body></html>`], {type: 'text/html'}));
     a.download = `chat-gpt-${slug}.html`;
