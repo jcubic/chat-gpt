@@ -2,9 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title></title>
-    <meta name="Description" content=""/>
-    <link rel="shortcut icon" href=""/>
+    <title>ChatGPT Saving Bookmark</title>
+    <meta name="Description" content="OpenSource bookmarklet for saving chatGPT conversations"/>
     <!--[if IE]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -12,6 +11,16 @@
     <link href="css/style.css" rel="stylesheet"/>
     -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+     footer {
+         position: absolute;
+         left: 0;
+         bottom: 0;
+         right: 0;
+         text-align: center;
+         padding-bottom: 5px;
+     }
+    </style>
 </head>
 <body>
   <h1>ChatGPT saving Conversation <a href="https://en.wikipedia.org/wiki/Bookmarklet">Bookmarklet</a></h1>
@@ -40,5 +49,8 @@
    }).then(res => res.text())
      .then(text => bookmark.href = text);
   </script>
+  <footer>
+    Copyright (C) 2022-2023 <a href="https://jakub.jankiewicz.org">Jakub T. Jankiewicz</a>
+  </footer>
 </body>
 </html>
