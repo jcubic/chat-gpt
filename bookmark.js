@@ -149,6 +149,7 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
 }
 .w-\\[30px\\] {
   width: 30px;
+  min-width: 30px;
 }
 .h-\\[30px\\] {
   height: 30px;
