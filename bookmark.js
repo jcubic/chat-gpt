@@ -143,6 +143,9 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
 .items-end {
   margin: 1em 1em 0 -1em;
 }
+.items-end img {
+  width: 100%;
+}
 /* user avatar don't have p tag with margin */
 body > .w-full:nth-child(2n+1) .items-end {
   margin-top: 0;
