@@ -273,7 +273,7 @@ code.hljs, code[class*=language-], pre[class*=language-] {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"/>
 </head>
 <body>${template.innerHTML}
-<div class="toggle"><input id="toggle" type="checkbox" /><label for="toggle"></label></div>
+<div class="toggle"><input id="toggle" type="checkbox"${is_dark_mode ? ' checked' : ''} /><label for="toggle"></label></div>
 <script>
 function decode(array) {
   const ua = new Uint8Array(array);
