@@ -304,7 +304,8 @@ toggle.addEventListener('change', () => {
     return (node.matches('.items-end') && node.querySelector('svg.h-6.w-6, img')) ||
       node.closest('svg') ||
       node.matches('svg.h-6.w-6') ||
-      node.matches('img[alt*="@"]')
+      node.matches('img[alt*="@"]') ||
+      node.matches('img[alt="User"]')
   }
   function canvas_to_array(canvas) {
     return new Promise(resolve => {
