@@ -1,4 +1,4 @@
-# chatGPT
+# chatGPT Bookmark
 [ChatGPT conversation saving bookmark](https://github.com/jcubic/chat-gpt).
 
 It's started as [DEV.to article](https://dev.to/jcubic/save-chatgpt-as-html-file-dhh).
