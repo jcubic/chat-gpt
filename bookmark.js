@@ -246,7 +246,7 @@ code.hljs, code[class*=language-], pre[class*=language-] {
   overflow-y: auto;
 }
 .toggle {
-  position: absolute;
+  position: fixed;
   top: 5px;
   right: 5px;
   font-size: 16px;
