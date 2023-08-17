@@ -1,7 +1,7 @@
 javascript:(async function() {
   try {
     const a = document.createElement('a');
-    const dom = document.querySelector('main > .flex-1 > .h-full .flex');
+    const dom = document.querySelector('main > .h-full > .flex-1 > .h-full .flex');
     const template = document.createElement('template');
     const user_image = dom.querySelector('.items-end img.rounded-sm');
     const avatar_data = await get_image_data(user_image);
@@ -48,6 +48,9 @@ html.light {
   background-color: white;
   color: rgb(52,53,65);
 }
+.dark body > header {
+    border-bottom: 1px solid rgba(32,33,35,.5);
+}
 body {
   font-size: 16px;
   font-family: sans-serif;
@@ -68,11 +71,14 @@ body > .w-full {
   max-width: 50rem;
 }
 .gap-1 {
-    gap: 0.25rem;
+  gap: 0.25rem;
 }
 /* model name */
 .justify-center {
   justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
 }
 .items-center {
   align-items: center;
