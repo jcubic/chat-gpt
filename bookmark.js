@@ -4,6 +4,8 @@ javascript:(async function() {
     const dom = document.querySelector('main > .h-full > .flex-1 > .h-full .flex');
     const template = document.createElement('template');
     const user_image = dom.querySelector('.items-end img.rounded-sm');
+    const content_images = dom.querySelectorAll('.empty\\:hidden > img');
+    const content_images_data = await get_content_images(content_images);
     const avatar_data = await get_image_data(user_image);
     const is_dark_mode = document.documentElement.matches('.dark');
     const title = document.title;
@@ -13,9 +15,9 @@ javascript:(async function() {
       .replace(non_letters_re, "-")
       .replace(trailing_dash_re, '');
     template.innerHTML = dom.innerHTML;
-    ['.items-end', 'img', 'svg', 'button', ':empty', '.items-end .text-xs'].forEach(selector => {
+    ['.items-end', 'img', 'svg', 'button', ':empty', '.items-end .text-xs', '[role="button"]'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
-        if (!node.closest('.math') && !is_avatar(node)) {
+        if (!node.closest('.math') && !is_avatar(node) && !is_content_image(node)) {
           node.remove();
         }
       });
@@ -28,7 +30,9 @@ javascript:(async function() {
       model.replaceWith(newModel);
     }
     template.content.querySelectorAll('img').forEach(node => {
-      node.setAttribute('alt', 'user avatar');
+      if (is_avatar(node)) {
+        node.setAttribute('alt', 'user avatar');
+      }
       ['srcset', 'style', 'src'].forEach(attr => {
         node.removeAttribute(attr);
       });
@@ -63,6 +67,9 @@ body > .w-full {
 .flex {
   display: flex;
   max-width: 100%;
+}
+p:first-child {
+  margin-top: 0;
 }
 .m-auto {
   margin: auto;
@@ -183,11 +190,41 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
 .h-\\[30px\\] {
   height: 30px;
 }
+.empty\\:hidden img {
+  max-width: 100%;
+}
 .items-end {
-  margin: 1em 1em 0 -1em;
+  margin: 0 1em 0 -1em;
 }
 .items-end img {
   width: 100%;
+  height: auto;
+}
+/* code intepreter */
+.bg-gray-100 {
+  background-color: rgba(236,236,241,1);
+}
+.text-gray-900 {
+  color: rgba(32,33,35,1);
+}
+.p-3 {
+  padding: 0.75rem;
+}
+.gap-3 {
+  gap: 0.75rem;
+}
+.text-xs {
+  font-size: .75rem;
+  line-height: 1rem;
+}
+.rounded {
+  border-radius: 0.25rem;
+}
+.items-start {
+  align-items: flex-start;
+}
+.flex-col {
+  flex-direction: column;
 }
 /* user avatar don't have p tag with margin */
 body > .w-full:nth-of-type(2n+1) .items-end {
@@ -312,9 +349,15 @@ const avatar_data = {
   '1x': decode([${avatar_data['1x'].toString()}]),
   '2x': decode([${avatar_data['2x'].toString()}])
 };
+const content_images = ${arr_stringify(content_images_data)}.map(decode);
 document.querySelectorAll('img').forEach(img => {
-   img.src = avatar_data['2x'];
-   img.srcset = \`\${avatar_data['1x']} 1x, \${avatar_data['2x']} 2x\`;
+   if (img.matches('.empty\\\\:hidden > img')) {
+     const uri = content_images.shift();
+     img.src = uri;
+   } else {
+     img.src = avatar_data['2x'];
+     img.srcset = \`\${avatar_data['1x']} 1x, \${avatar_data['2x']} 2x\`;
+   }
 });
 toggle.addEventListener('change', () => {
     const className = toggle.checked ? 'dark' : 'light';
@@ -336,6 +379,9 @@ toggle.addEventListener('change', () => {
       node.matches('img[alt*="@"]') ||
       node.matches('img[alt="User"]')
   }
+  function is_content_image(node) {
+    return node.matches('.empty\\:hidden > img');
+  }
   function canvas_to_array(canvas) {
     return new Promise(resolve => {
       canvas.toBlob(blob => {
@@ -345,13 +391,16 @@ toggle.addEventListener('change', () => {
       }, "image/jpeg", 0.95);
     });
   }
-  function render_image(src, ctx) {
+  function render_image(image, ctx) {
+    ctx.canvas.width = image.naturalWidth;
+    ctx.canvas.height = image.naturalHeight;
+    ctx.drawImage(image, 0, 0);
+  }
+  function render_image_uri(src, ctx) {
     return new Promise(resolve => {
       const image = new Image();
       image.onload = function() {
-        ctx.canvas.width = image.width;
-        ctx.canvas.height = image.height;
-        ctx.drawImage(image, 0, 0);
+        render_image(image, ctx);
         resolve();
       };
       image.src = src;
@@ -364,10 +413,35 @@ toggle.addEventListener('change', () => {
     const src = get_src(img);
 
     const arr = await Promise.all(Object.entries(src).map(async ([scale, src]) => {
-      await render_image(src, ctx);
+      await render_image_uri(src, ctx);
       return [scale, await canvas_to_array(canvas)];
     }));
     return Object.fromEntries(arr);
+  }
+  async function get_content_images(imgs) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    return Promise.all(Array.from(imgs).map(async img => {
+      await new Promise(resolve => {
+        if (img.hasAttribute('crossOrigin')) {
+          return resolve();
+        }
+        img.addEventListener('load', function handler() {
+          img.removeEventListener('load', handler);
+          resolve();
+        });
+        img.setAttribute('crossOrigin', 'anonymous');
+      });
+      render_image(img, ctx);
+      return canvas_to_array(canvas);
+    }));
+  }
+  function arr_stringify(arr) {
+    const strings = arr.map(data => {
+      return `[${data}]`;
+    });
+    return `[${strings.join(',')}]`;
   }
   function get_src(image) {
     const m = image.srcset.match(/(.*)\s+1x,\s*(.*)2x/);
