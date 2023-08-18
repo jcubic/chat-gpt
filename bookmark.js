@@ -14,10 +14,29 @@ javascript:(async function() {
     const slug = title.toLowerCase()
       .replace(non_letters_re, "-")
       .replace(trailing_dash_re, '');
+    /* Show Python snippets from code interpreter */
+    const buttons = [...dom.querySelectorAll('[role="button"]')].map(node => {
+      const parent = node.parentNode;
+      if (node.textContent.trim() === 'Show work') {
+        node.click();
+      }
+      return parent;
+    });
+    while (true) {
+      const expanded = buttons.filter(node => node.nextSibling);
+      if (expanded.length === buttons.length) {
+        break;
+      } else {
+        await delay(50);
+      }
+    }
     template.innerHTML = dom.innerHTML;
     ['.items-end', 'img', 'svg', 'button', ':empty', '.items-end .text-xs', '[role="button"]'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
-        if (!node.closest('.math') && !is_avatar(node) && !is_content_image(node)) {
+        if (!node.closest('.math') &&
+            !is_avatar(node) &&
+            !is_content_image(node) &&
+            !is_upload_icon(node)) {
           node.remove();
         }
       });
@@ -235,6 +254,52 @@ body > header {
 .flex-col {
   flex-direction: column;
 }
+.text-white {
+  color: rgba(255,255,255,1);
+}
+.bg-gray-500 {
+  background-color: rgba(142,142,160,1);
+}
+.rounded-l-md {
+  border-bottom-left-radius: 0.375rem;
+  border-top-left-radius: 0.375rem;
+}
+.font-medium {
+  font-weight: 500;
+}
+.py-2 {
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.bg-gray-50 {
+  background-color: rgba(247,247,248,1);
+}
+.rounded-r-md {
+  border-bottom-right-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+.self-stretch {
+  align-self: stretch;
+}
+.mt-3 {
+  margin-top: 0.75rem;
+}
+.text-xs {
+  font-size: .75rem;
+  line-height: 1rem;
+}
+.prose {
+  font-size: 1rem;
+  line-height: 1.75;
+}
 /* user avatar don't have p tag with margin */
 body > .w-full:nth-of-type(2n+1) .items-end {
   margin-top: 0;
@@ -391,6 +456,9 @@ toggle.addEventListener('change', () => {
   function is_content_image(node) {
     return node.matches('.empty\\:hidden > img');
   }
+  function is_upload_icon(node) {
+    return node.matches('.group .bg-gray-500 svg');
+  }
   function canvas_to_array(canvas) {
     return new Promise(resolve => {
       canvas.toBlob(blob => {
@@ -473,5 +541,8 @@ toggle.addEventListener('change', () => {
         image.scrollIntoView();
       }
     });
+  }
+  function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
   }
 })();
