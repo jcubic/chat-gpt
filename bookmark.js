@@ -200,7 +200,16 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
   width: 100%;
   height: auto;
 }
+.w-full .items-end + div {
+  width: calc(100% - 115px);
+}
+.w-full {
+  width: 100%;
+}
 /* code intepreter */
+body > header {
+  transform: none !important;
+}
 .bg-gray-100 {
   background-color: rgba(236,236,241,1);
 }
