@@ -215,10 +215,6 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
 .items-end {
   margin: 0 1em 0 -1em;
 }
-.items-end img {
-  width: 100%;
-  height: auto;
-}
 .w-full .items-end + div {
   width: calc(100% - 115px);
 }
@@ -419,18 +415,14 @@ function decode(array) {
   const ua = new Uint8Array(array);
   return URL.createObjectURL(new Blob([ua], {type : "image/jpeg"}));
 }
-const avatar_data = {
-  '1x': decode([${avatar_data['1x'].toString()}]),
-  '2x': decode([${avatar_data['2x'].toString()}])
-};
+const avatar_data = decode([${avatar_data.toString()}]);
 const content_images = ${arr_stringify(content_images_data)}.map(decode);
 document.querySelectorAll('img').forEach(img => {
    if (img.matches('.empty\\\\:hidden > img')) {
      const uri = content_images.shift();
      img.src = uri;
    } else {
-     img.src = avatar_data['2x'];
-     img.srcset = \`\${avatar_data['1x']} 1x, \${avatar_data['2x']} 2x\`;
+     img.src = avatar_data;
    }
 });
 toggle.addEventListener('change', () => {
@@ -447,9 +439,9 @@ toggle.addEventListener('change', () => {
     alert(e.message);
   }
   function is_avatar(node) {
-    return (node.matches('.items-end') && node.querySelector('svg.h-6.w-6, img')) ||
+    return (node.matches('.items-end') && node.querySelector('svg.icon-md, img')) ||
       node.closest('svg') ||
-      node.matches('svg.h-6.w-6') ||
+      node.matches('svg.icon-md') ||
       node.matches('img[alt*="@"]') ||
       node.matches('img[alt="User"]')
   }
@@ -480,20 +472,15 @@ toggle.addEventListener('change', () => {
         render_image(image, ctx);
         resolve();
       };
+      image.setAttribute('crossOrigin', 'anonymous');
       image.src = src;
     });
   }
   async function get_image_data(img) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    await force_load_image(img);
-    const src = get_src(img);
-
-    const arr = await Promise.all(Object.entries(src).map(async ([scale, src]) => {
-      await render_image_uri(src, ctx);
-      return [scale, await canvas_to_array(canvas)];
-    }));
-    return Object.fromEntries(arr);
+    await render_image_uri(img.src, ctx);
+    return canvas_to_array(canvas);
   }
   async function get_content_images(imgs) {
     const canvas = document.createElement('canvas');
@@ -526,21 +513,6 @@ toggle.addEventListener('change', () => {
       '1x': m[1],
       '2x': m[2]
     };
-  }
-  function force_load_image(image) {
-    return new Promise(resolve => {
-      if (image.srcset) {
-        resolve();
-      } else {
-        const scroller = document.querySelector('[class^="react-scroll-to-bottom"]:not(.h-full)');
-        const scrollTop = scroller.scrollTop;
-        image.addEventListener('load', () => {
-          scroller.scrollTop = scrollTop;
-          resolve();
-        }, { once: true });
-        image.scrollIntoView();
-      }
-    });
   }
   function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
