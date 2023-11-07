@@ -8,7 +8,7 @@ javascript:(async function() {
     const content_images_data = await get_content_images(content_images);
     const avatar_data = await get_image_data(user_image);
     const is_dark_mode = document.documentElement.matches('.dark');
-    const title = document.querySelector('ol li a.bg-gray-800')?.textContent ?? document.title;
+    const title = document.querySelector('ol li a.bg-gray-100')?.textContent ?? document.title;
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
     const trailing_dash_re = /(^-)|(-$)/g;
     const slug = title.toLowerCase()
