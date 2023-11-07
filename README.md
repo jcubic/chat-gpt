@@ -19,7 +19,7 @@ Here is interesting usage of the bookmark that people made:
 * [sync download chatGPT conversation with Amazon S3](http://scripting.com/2023/03/08/153909.html)
 
 ## Contribution
-If you want to add something to the boomark, please do. Also if the code doesn't work please add an issue.
+If you want to add something to the bookmark, please do. Also if the code doesn't work don't hesitate to report an issue.
 
 ## License
 Copyright 2022-2023 [Jakub T. Jankiewicz](https://jakub.jankiewicz.org/)<br/>
