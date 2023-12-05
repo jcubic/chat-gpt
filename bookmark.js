@@ -439,9 +439,9 @@ toggle.addEventListener('change', () => {
     alert(e.message);
   }
   function is_avatar(node) {
-    return (node.matches('.items-end') && node.querySelector('svg.icon-md, img')) ||
+    return (node.matches('.items-end') && node.querySelector('svg[class*="icon"], img')) ||
       node.closest('svg') ||
-      node.matches('svg.icon-md') ||
+      node.matches('svg[class*="icon"]') ||
       node.matches('img[alt*="@"]') ||
       node.matches('img[alt="User"]')
   }
