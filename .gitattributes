@@ -1,1 +1,2 @@
-*.html linguist-documentation
+index.html linguist-documentation
+20*/*.html linguist-generated
