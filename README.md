@@ -3,7 +3,7 @@
 
 It's started as [DEV.to article](https://dev.to/jcubic/save-chatgpt-as-html-file-dhh).
 But I've decided that It would be better to track it on GitHub and update so it will still work,
-when OpenAI change their application.
+when OpenAI change their web application.
 
 ## What is Bookmarklet?
 Bookmarklet is a JavaScript code that run as URL from your bookmarks. To run the code you need
