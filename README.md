@@ -22,5 +22,5 @@ Here is interesting usage of the bookmark that people made:
 If you want to add something to the bookmark, please do. Also if the code doesn't work don't hesitate to report an issue.
 
 ## License
-Copyright 2022-2023 [Jakub T. Jankiewicz](https://jakub.jankiewicz.org/)<br/>
+Copyright 2022-2024 [Jakub T. Jankiewicz](https://jakub.jankiewicz.org/)<br/>
 Released under GNU GPL v3 or later
