@@ -3,10 +3,8 @@ javascript:(async function() {
     const a = document.createElement('a');
     const dom = document.querySelector('main > .h-full > .flex-1 > .h-full .flex');
     const template = document.createElement('template');
-    const user_image = dom.querySelector('.items-end img.rounded-sm');
     const content_images = dom.querySelectorAll('.empty\\:hidden > img');
     const content_images_data = await get_content_images(content_images);
-    const avatar_data = await get_image_data(user_image);
     const is_dark_mode = document.documentElement.matches('.dark');
     const title = document.querySelector('ol li a.bg-gray-100')?.textContent ?? document.title;
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
@@ -415,14 +413,11 @@ function decode(array) {
   const ua = new Uint8Array(array);
   return URL.createObjectURL(new Blob([ua], {type : "image/jpeg"}));
 }
-const avatar_data = decode([${avatar_data.toString()}]);
 const content_images = ${arr_stringify(content_images_data)}.map(decode);
 document.querySelectorAll('img').forEach(img => {
    if (img.matches('.empty\\\\:hidden > img')) {
      const uri = content_images.shift();
      img.src = uri;
-   } else {
-     img.src = avatar_data;
    }
 });
 toggle.addEventListener('change', () => {
