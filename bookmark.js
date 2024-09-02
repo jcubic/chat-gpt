@@ -29,7 +29,7 @@ javascript:(async function() {
       }
     }
     template.innerHTML = dom.innerHTML;
-    ['.items-end', 'img', 'svg', 'button', ':empty', '.items-end .text-xs', '[role="button"]'].forEach(selector => {
+    ['.sr-only', 'img', 'svg', 'button', ':empty', '.items-end .text-xs', '[role="button"]'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
         if (!node.closest('.math') &&
             !is_avatar(node) &&
@@ -112,6 +112,12 @@ p:first-child {
 }
 .h-4 {
   height: 1rem;
+}
+.w-8 {
+  width: 2rem;
+}
+.h-8 {
+  height: 2rem;
 }
 /* prompt */
 .dark body > .w-full:nth-of-type(2n+1) {
