@@ -10,7 +10,7 @@ Bookmarklet is a JavaScript code that run as URL from your bookmarks. To run the
 create new Bookmark and copy the code from the
 [bookmark.js](https://github.com/jcubic/chat-gpt/blob/master/bookmark.js) JavaScript file. If you
 don't know how you can open the [website](https://jcubic.github.io/chat-gpt/) and drag & drop the
-look to your bookmarks.
+link to your bookmarks.
 
 You can read more about [Bookmarklets on Wikipedia](https://en.wikipedia.org/wiki/Bookmarklet).
 
