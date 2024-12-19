@@ -57,8 +57,12 @@
            return 'javascript:' + escape(output.code);
        }
    }
+   function filename() {
+       const url = new URL(location.href);
+       return new URLSearchParams(url.search).get('file') ?? 'bookmark.js';
+   }
    hash('master').then(hash => {
-       return fetch(`https://cdn.jsdelivr.net/gh/jcubic/chat-gpt@${hash}/bookmark.js`);
+       return fetch(`https://cdn.jsdelivr.net/gh/jcubic/chat-gpt@${hash}/${filename()}`);
    }).then(res => res.text())
      .then(format)
      .then(code => bookmark.href = code);
