@@ -135,7 +135,7 @@ p:first-child {
   height: 2rem;
 }
 /* code */
-.dark\\:bg-token-main-surface-secondary:is(.dark *) {
+.dark\\:bg-token-main-surface-secondary:is(html.dark *) {
   background: #2f2f2f;
 }
 .text-token-text-secondary {
