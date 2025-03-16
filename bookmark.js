@@ -1,7 +1,7 @@
 javascript:(async function() {
   try {
     const a = document.createElement('a');
-    const dom = document.querySelector('main > .h-full > .flex-1 > .h-full .flex');
+    const dom = document.querySelector('main > .h-full > .h-full > .flex-1 > .h-full .flex');
     const template = document.createElement('template');
     const content_images = dom.querySelectorAll('.empty\\:hidden > img');
     const content_images_data = await get_content_images(content_images);
@@ -29,7 +29,7 @@ javascript:(async function() {
       }
     }
     template.innerHTML = dom.innerHTML;
-    ['.sr-only', 'img', 'svg', 'button', ':empty', '.items-end .text-xs', '[role="button"]'].forEach(selector => {
+    ['.sr-only', 'img', 'svg', 'button', ':empty', '[role="button"]'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
         if (!node.closest('.math') &&
             !is_avatar(node) &&
@@ -61,13 +61,28 @@ javascript:(async function() {
   <title>Chat GPT: ${title}</title>
   <meta name="generator" content="chatGPT Saving Bookmark"/>
 <style>
+*, :after, :before {
+  border: 0 solid #d9d9e3;
+  box-sizing: border-box;
+}
+body > .flex-col {
+  max-width: 50rem;
+  margin: 0 auto;
+}
 html.dark {
   background-color: rgb(32,33,35);
   color: rgb(236,236,241);
+  --message-surface: rgba(50, 50, 50, .85);
+  --sidebar-surface-primary: #171717;
+  --border-medium: hsla(0, 0%, 100%, .15);
 }
 html.light {
   background-color: white;
   color: rgb(52,53,65);
+  --message-surface: rgba(200, 200, 200, .85);
+  --sidebar-surface-primary: #f9f9f9;
+  --text-secondary: #5d5d5d;
+  --border-medium: rgba(0, 0, 0, .15);
 }
 .dark body > header {
     border-bottom: 1px solid rgba(32,33,35,.5);
@@ -119,9 +134,46 @@ p:first-child {
 .h-8 {
   height: 2rem;
 }
+/* code */
+.dark\\:bg-token-main-surface-secondary:is(.dark *) {
+  background: #2f2f2f;
+}
+.text-token-text-secondary {
+  color: var(--text-secondary);
+}
+.bg-token-sidebar-surface-primary {
+  background-color: var(--sidebar-surface-primary);
+}
+.rounded-t-\\[5px\\] {
+  border-radius: 5px 5px 0 0;
+}
+.border-\\[0\\.5px\\], .border-\\[\\.5px\\] {
+  border-width: .5px;
+}
+.dark\\:prose-invert:is(.dark *) :where(code):not(:where([class~=not-prose] *)) {
+  background-color: #424242;
+}
+.dark\\:prose-invert:is(.dark *) :where(pre):not(:where([class~=not-prose] *)) code {
+  background: transparent;
+}
+.prose :where(code):not(:where([class~=not-prose] *)) {
+  background-color: #ececec;
+  border-radius: 3px;
+  font-weight: 500;
+  padding: 2px 4px;
+}
+.dark\\:prose-invert:is(.dark *) :where(code):not(:where([class~=not-prose] *)) {
+  background-color: #424242;
+}
+.border-token-border-medium {
+  border-color: var(--border-medium);
+}
 /* prompt */
-.dark body > .w-full:nth-of-type(2n+1) {
-  background: rgb(52,53,65);
+.bg-token-message-surface {
+  background-color: var(--message-surface);
+  padding: 10px 20px;
+  border-radius: 10px;
+  max-width: 70%;
 }
 /* response */
 .dark body > .w-full:nth-of-type(2n+2) {
@@ -149,10 +201,6 @@ pre code.hljs {
 }
 .flex-col {
   flex-direction: column;
-}
-*, :after, :before {
-  border: 0 solid #d9d9e3;
-  box-sizing: border-box;
 }
 table {
   border-collapse: collapse;
@@ -216,11 +264,15 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
 .empty\\:hidden img {
   max-width: 100%;
 }
-.items-end {
-  margin: 0 1em 0 -1em;
-}
 .w-full .items-end + div {
   width: calc(100% - 115px);
+}
+.items-end {
+  align-items: flex-end;
+}
+.py-\\[18px\\] {
+  padding-bottom: 18px;
+  padding-top: 18px;
 }
 .w-full {
   width: 100%;
