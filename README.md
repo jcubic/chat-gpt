@@ -29,5 +29,5 @@ download the file and add it to the repository in current date folder. You shoul
 file in index.html. This is to show how the updates works, it also act as a CHANGELOG.
 
 ## License
-Copyright 2022-2024 [Jakub T. Jankiewicz](https://jakub.jankiewicz.org/)<br/>
+Copyright 2022-2025 [Jakub T. Jankiewicz](https://jakub.jankiewicz.org/)<br/>
 Released under GNU GPL v3 or later
