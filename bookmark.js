@@ -1,9 +1,10 @@
 javascript:(async function() {
   try {
     const a = document.createElement('a');
-    const dom = document.querySelector('main > .h-full > .h-full > .flex-1 > .h-full .flex');
+    const selector = 'body > div.flex.h-full > div > div.flex.h-full > div.flex.h-full';
+    const dom = document.querySelector(selector);
     const template = document.createElement('template');
-    const content_images = dom.querySelectorAll('.empty\\:hidden > img');
+    const content_images = dom.querySelectorAll('[role="button"] img.w-full, button img.w-full');
     const content_images_data = await get_content_images(content_images);
     const is_dark_mode = document.documentElement.matches('.dark');
     const title = document.querySelector('ol li a.bg-gray-100')?.textContent ?? document.title;
@@ -106,8 +107,9 @@ p:first-child {
 .m-auto {
   margin: auto;
 }
-.text-base {
+.text-base > div {
   max-width: 50rem;
+  margin-inline: auto;
 }
 .gap-1 {
   gap: 0.25rem;
