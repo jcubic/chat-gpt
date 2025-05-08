@@ -80,9 +80,10 @@
                 </p>
                 <div class="button-like">
                     <button class="copy-button" onclick="copyBookmarklet()">Copy Bookmarklet</button>
-                  </div>
-                  <textarea id="bookmarklet-code" readonly style="display: none; margin-top: 1rem; width: 100%; max-width: 700px; height: 120px;"></textarea>
-                                    
+                </div>
+                <textarea id="bookmarklet-code" readonly
+                    style="display: none; margin-top: 1rem; width: 100%; max-width: 700px; height: 120px;"></textarea>
+
 
                 <p>
                     If you don't know how, you can drag & drop the
@@ -149,37 +150,6 @@
             </path>
         </svg>
     </a>
-    <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/terser.min.js"></script>
-    <script>
-        async function hash(branch) {
-            try {
-                var url = `https://api.github.com/repos/jcubic/chat-gpt/commits?sha=${branch}`;
-                var res = await fetch(url);
-                var data = await res.json();
-                return data[0].sha;
-            } catch (e) {
-                return branch;
-            }
-        }
-        async function format(code) {
-            code = code.replace(/^javascript:/, '');
-            var output = await terser.minify(code);
-            if (output.error) {
-                alert(output.error);
-            } else {
-                return 'javascript:' + escape(output.code);
-            }
-        }
-        function filename() {
-            const url = new URL(location.href);
-            return new URLSearchParams(url.search).get('file') ?? 'bookmark.js';
-        }
-        hash('master').then(hash => {
-            return fetch(`https://cdn.jsdelivr.net/gh/jcubic/chat-gpt@${hash}/${filename()}`);
-        }).then(res => res.text())
-            .then(format)
-            .then(code => bookmark.href = code);
-    </script>
 
     <script>
         const hero = document.querySelector('.hero');
@@ -204,37 +174,58 @@
         window.addEventListener('scroll', onScroll, { passive: true });
     </script>
 
-<script>
-    async function copyBookmarklet() {
-      const textarea = document.getElementById('bookmarklet-code');
-  
-      try {
-        const res = await fetch('https://raw.githubusercontent.com/jcubic/chat-gpt/master/bookmark.js');
-        if (!res.ok) throw new Error('Network error');
-  
-        const js = await res.text();
-        const bookmarklet = 'javascript:' + encodeURIComponent(js);
-  
-        try {
-          await navigator.clipboard.writeText(bookmarklet);
-          alert('✅ Bookmarklet copied to clipboard.\nNow create a bookmark and paste it there.');
-          textarea.style.display = 'none';
-        } catch (err) {
-          textarea.value = bookmarklet;
-          textarea.style.display = 'block';
-          textarea.focus();
-          setTimeout(() => {
-            textarea.select();
-            alert('⚠️ Auto-copy is not supported.\nPlease copy manually using Ctrl/Cmd + C.');
-          }, 100);
+    <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/terser.min.js"></script>
+    <script>
+        async function getBookmarkletCode() {
+            const branch = 'master';
+            const filename = new URLSearchParams(location.search).get('file') ?? 'bookmark.js';
+
+            const commitRes = await fetch(`https://api.github.com/repos/jcubic/chat-gpt/commits?sha=${branch}`);
+            const commitData = await commitRes.json();
+            const hash = commitData[0].sha;
+
+            const codeRes = await fetch(`https://cdn.jsdelivr.net/gh/jcubic/chat-gpt@${hash}/${filename}`);
+            const code = await codeRes.text();
+
+            const minified = await terser.minify(code.replace(/^javascript:/, ''));
+            if (minified.error) throw minified.error;
+
+            return 'javascript:' + escape(minified.code);
         }
-  
-      } catch (e) {
-        alert('❌ Failed to load the script.');
-        console.error(e);
-      }
-    }
-  </script>
+
+        getBookmarkletCode()
+            .then(code => {
+                const bookmark = document.getElementById('bookmark');
+                if (bookmark) bookmark.href = code;
+            })
+            .catch(console.error);
+
+        async function copyBookmarklet() {
+            const textarea = document.getElementById('bookmarklet-code');
+
+            try {
+                const code = await getBookmarkletCode();
+
+                try {
+                    await navigator.clipboard.writeText(code);
+                    alert('✅ Bookmarklet copied to clipboard.\nNow create a bookmark and paste it there.');
+                    textarea.style.display = 'none';
+                } catch {
+                    textarea.value = code;
+                    textarea.style.display = 'block';
+                    textarea.focus();
+                    setTimeout(() => {
+                        textarea.select();
+                        alert('⚠️ Auto-copy is not supported.\nPlease copy manually using Ctrl/Cmd + C.');
+                    }, 100);
+                }
+
+            } catch (e) {
+                alert('❌ Failed to load the script.');
+                console.error(e);
+            }
+        }
+    </script>
 
 </body>
 
