@@ -80,7 +80,9 @@
                 </p>
                 <div class="button-like">
                     <button class="copy-button" onclick="copyBookmarklet()">Copy Bookmarklet</button>
-                </div>
+                  </div>
+                  <textarea id="bookmarklet-code" readonly style="display: none; margin-top: 1rem; width: 100%; max-width: 700px; height: 120px;"></textarea>
+                                    
 
                 <p>
                     If you don't know how, you can drag & drop the
@@ -178,7 +180,7 @@
             .then(format)
             .then(code => bookmark.href = code);
     </script>
-    
+
     <script>
         const hero = document.querySelector('.hero');
         let lastScrollY = 0;
@@ -202,21 +204,37 @@
         window.addEventListener('scroll', onScroll, { passive: true });
     </script>
 
-    <script>
-        async function copyBookmarklet() {
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/jcubic/chat-gpt/master/bookmark.js');
-                if (!response.ok) throw new Error('Network response was not ok');
-                const js = await response.text();
-                const bookmarklet = 'javascript:' + encodeURIComponent(js);
-                await navigator.clipboard.writeText(bookmarklet);
-                alert('✅ Bookmarklet code copied to clipboard.\nNow create a new bookmark and paste it there.');
-            } catch (err) {
-                alert('❌ Failed to copy. Please try again.');
-                console.error(err);
-            }
+<script>
+    async function copyBookmarklet() {
+      const textarea = document.getElementById('bookmarklet-code');
+  
+      try {
+        const res = await fetch('https://raw.githubusercontent.com/jcubic/chat-gpt/master/bookmark.js');
+        if (!res.ok) throw new Error('Network error');
+  
+        const js = await res.text();
+        const bookmarklet = 'javascript:' + encodeURIComponent(js);
+  
+        try {
+          await navigator.clipboard.writeText(bookmarklet);
+          alert('✅ Bookmarklet copied to clipboard.\nNow create a bookmark and paste it there.');
+          textarea.style.display = 'none';
+        } catch (err) {
+          textarea.value = bookmarklet;
+          textarea.style.display = 'block';
+          textarea.focus();
+          setTimeout(() => {
+            textarea.select();
+            alert('⚠️ Auto-copy is not supported.\nPlease copy manually using Ctrl/Cmd + C.');
+          }, 100);
         }
-    </script>
+  
+      } catch (e) {
+        alert('❌ Failed to load the script.');
+        console.error(e);
+      }
+    }
+  </script>
 
 </body>
 
