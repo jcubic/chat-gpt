@@ -1,8 +1,304 @@
-footer {
+/* ====== Reset & Base ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: #f0f0f0;
+    line-height: 1.6;
+}
+
+a {
+    color: #C19A6B;
+    text-decoration: none;
+}
+
+/* ====== Hero Section ====== */
+.hero {
+    height: 100vh;
+    background: url('assets/hero-bg.jpg') center center / cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.hero.shrink {
+    height: 80px;
+    padding: 0 2rem;
+}
+
+/* Overlay */
+.hero::before {
+    content: "";
     position: absolute;
+    top: 0;
     left: 0;
-    bottom: 0;
-    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+/* Hero Content */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    padding-bottom: 5px;
-  }
+    transition: all 0.3s ease;
+}
+
+.hero.shrink .hero-content {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    max-height: 80px;
+    padding: 0;
+    height: 100%;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    opacity: 0.7;
+    animation: bounce 2s infinite;
+    z-index: 2;
+}
+
+.hero.shrink .scroll-indicator {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(8px);
+    }
+}
+
+/* Hero Title */
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #FAF9F6;
+}
+
+.hero.shrink h1 {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    height: 80px;
+}
+
+/* Hero Subtitle */
+.hero .subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    color: #FAF9F6;
+}
+
+.hero.shrink .subtitle {
+    display: none;
+}
+
+/* ====== Navigation ====== */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+.nav-links a {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    height: 80px;
+    /* nav 항목들도 높이 기준 맞추기 */
+    line-height: 1;
+    padding-top: 0.5rem;
+}
+
+.nav-links a:hover {
+    color: #C19A6B;
+}
+
+/* ====== Main Content ====== */
+main {
+    padding-top: 100vh;
+}
+
+section {
+    width: 100%;
+    padding: 13rem 1rem;
+    background-color: #1e1e1e;
+}
+
+section .container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+section:nth-child(even) {
+    background-color: #191919;
+}
+
+section h2 {
+    text-align: center;
+}
+
+section p {
+    text-align: left;
+}
+
+section ul,
+section ol {
+    list-style-position: outside;
+    padding-left: 1.5rem;
+    margin: 1rem auto;
+    padding-left: 1.5rem;
+    max-width: 700px;
+    text-align: left;
+    color: #cccccc;
+}
+
+section li {
+    margin-bottom: 0.5rem;
+    padding-left: 0.25rem;
+}
+
+#about {
+    scroll-margin-top: 150px;
+}
+
+#examples {
+    scroll-margin-top: 150px;
+}
+
+h1,
+h2 {
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+/* ====== Button-like Links ====== */
+.button-like {
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.copy-button {
+    display: inline-block;
+    background-color: #C19A6B;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.copy-button:hover {
+    background-color: #a87c4f;
+    transform: translateY(-2px);
+}
+
+/* ====== Footer ====== */
+footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.9rem;
+    color: #aaaaaa;
+}
+
+/* ====== GitHub Octocat Badge ====== */
+.github-corner {
+    position: fixed;
+    top: 0;
+    right: 0;
+    border: 0;
+    fill: #151513;
+    color: #fff;
+    width: 80px;
+    height: 80px;
+    z-index: 2001;
+}
+
+.github-corner .octo-arm {
+    transform-origin: 130px 106px;
+}
+
+.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+}
+
+@keyframes octocat-wave {
+
+    0%,
+    100% {
+        transform: rotate(0);
+    }
+
+    20%,
+    60% {
+        transform: rotate(-25deg);
+    }
+
+    40%,
+    80% {
+        transform: rotate(10deg);
+    }
+}
+
+@media (max-width: 500px) {
+    .github-corner:hover .octo-arm {
+        animation: none;
+    }
+
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+}
