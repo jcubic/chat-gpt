@@ -18,61 +18,40 @@ a {
 }
 
 /* ====== Hero Section ====== */
-.hero {
+.hero-fullscreen {
+    position: relative;
     height: 100vh;
     background: url('assets/hero-bg.jpg') center center / cover no-repeat;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.hero.shrink {
-    height: 80px;
-    padding: 0 2rem;
-}
-
-/* Overlay */
-.hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1;
-}
+  }
 
 /* Hero Content */
 .hero-content {
-    position: relative;
     z-index: 2;
-    padding: 2rem;
-    max-width: 800px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     text-align: center;
-    transition: all 0.3s ease;
-}
+    padding: 2rem;
+  }
 
-.hero.shrink .hero-content {
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: rgba(18, 18, 18, 0.95);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    padding: 0.5rem 4rem;
     display: flex;
     align-items: center;
-    flex-direction: row;
     justify-content: space-between;
-    width: 100%;
-    max-height: 80px;
-    padding: 0;
-    height: 100%;
-}
+  }
+
+  .sticky-header h1 {
+    padding-top: 0.8rem;
+    font-size: 1rem;
+  }
 
 /* Scroll Indicator */
 .scroll-indicator {
@@ -84,13 +63,6 @@ a {
     opacity: 0.7;
     animation: bounce 2s infinite;
     z-index: 2;
-}
-
-.hero.shrink .scroll-indicator {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
 }
 
 @keyframes bounce {
@@ -106,32 +78,18 @@ a {
 }
 
 /* Hero Title */
-.hero h1 {
+.hero-fullscreen h1 {
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 1rem;
     color: #FAF9F6;
 }
 
-.hero.shrink h1 {
-    font-size: 1rem;
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    height: 80px;
-}
-
 /* Hero Subtitle */
-.hero .subtitle {
+.hero-fullscreen .subtitle {
     font-size: 1.25rem;
     margin-bottom: 2rem;
     color: #FAF9F6;
-}
-
-.hero.shrink .subtitle {
-    display: none;
 }
 
 /* ====== Navigation ====== */
@@ -154,9 +112,6 @@ a {
     display: flex;
     align-items: center;
     height: 80px;
-    /* nav 항목들도 높이 기준 맞추기 */
-    line-height: 1;
-    padding-top: 0.5rem;
 }
 
 .nav-links a:hover {
@@ -165,13 +120,15 @@ a {
 
 /* ====== Main Content ====== */
 main {
-    padding-top: 100vh;
+    padding-top: 15rem;
+    scroll-snap-type: y mandatory;
 }
 
 section {
     width: 100%;
     padding: 13rem 1rem;
     background-color: #1e1e1e;
+    scroll-snap-align: start;
 }
 
 section .container {

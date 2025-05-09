@@ -31,20 +31,26 @@
 </head>
 
 <body>
-    <header class="hero" id="hero">
+    <header class="hero-fullscreen">
         <div class="hero-content">
-            <h1 class="hero-title">ChatGPT Saving Bookmark</h1>
+            <h1>ChatGPT Saving Bookmark</h1>
             <p class="subtitle">A lightweight bookmarklet to save your ChatGPT conversations as HTML files.</p>
-            <nav class="navbar">
-                <ul class="nav-links">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#examples">Examples</a></li>
-                    <li><a href="https://github.com/jcubic/chat-gpt" target="_blank" rel="noopener">GitHub</a></li>
-                </ul>
-            </nav>
+            <img src="assets/down.png" alt="Scroll down" class="scroll-indicator" />
         </div>
-        <img src="assets/down.png" alt="Scroll down" class="scroll-indicator" />
+
+
     </header>
+
+    <div class="sticky-header">
+        <h1>ChatGPT Saving Bookmark</h1>
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="https://github.com/jcubic/chat-gpt" target="_blank" rel="noopener">GitHub</a></li>
+            </ul>
+        </nav>
+    </div>
 
     <main>
         <section id="about">
@@ -150,29 +156,6 @@
             </path>
         </svg>
     </a>
-
-    <script>
-        const hero = document.querySelector('.hero');
-        let lastScrollY = 0;
-        let ticking = false;
-
-        function onScroll() {
-            lastScrollY = window.scrollY;
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    if (lastScrollY > 100) {
-                        hero.classList.add('shrink');
-                    } else {
-                        hero.classList.remove('shrink');
-                    }
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-    </script>
 
     <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/terser.min.js"></script>
     <script>
