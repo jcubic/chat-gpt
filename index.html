@@ -195,8 +195,7 @@
 
         getBookmarkletCode()
             .then(code => {
-                const bookmark = document.getElementById('bookmark');
-                if (bookmark) bookmark.href = code;
+                bookmark.href = code;
             })
             .catch(console.error);
 
