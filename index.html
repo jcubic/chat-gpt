@@ -164,10 +164,12 @@
             const filename = new URLSearchParams(location.search).get('file') ?? 'bookmark.js';
 
             const commitRes = await fetch(`https://api.github.com/repos/jcubic/chat-gpt/commits?sha=${branch}`);
+            if (!commitRes.ok) throw new Error('Failed to fetch commit hash');
             const commitData = await commitRes.json();
             const hash = commitData[0].sha;
 
             const codeRes = await fetch(`https://cdn.jsdelivr.net/gh/jcubic/chat-gpt@${hash}/${filename}`);
+            if (!codeRes.ok) throw new Error('Failed to fetch bookmarklet code');
             const code = await codeRes.text();
 
             const minified = await terser.minify(code.replace(/^javascript:/, ''));
