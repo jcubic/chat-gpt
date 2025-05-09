@@ -171,6 +171,11 @@
     <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/terser.min.js"></script>
     <script>
         async function getBookmarkletCode() {
+            const bookmark = document.getElementById('bookmark');
+            if (bookmark && bookmark.href.startsWith('javascript:')) {
+                return bookmark.href;
+            }
+
             const branch = 'master';
             const filename = new URLSearchParams(location.search).get('file') ?? 'bookmark.js';
 
