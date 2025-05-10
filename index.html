@@ -1,76 +1,231 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8" />
     <title>ChatGPT Saving Bookmark</title>
-    <meta name="Description" content="OpenSource bookmarklet for saving chatGPT conversations"/>
+    <meta name="description" content="OpenSource bookmarklet for saving chatGPT conversations" />
     <!--[if IE]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-     footer {
-         position: absolute;
-         left: 0;
-         bottom: 0;
-         right: 0;
-         text-align: center;
-         padding-bottom: 5px;
-     }
-    </style>
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="chatgpt, bookmarklet, save chatgpt conversation, openai, gpt tool" />
+    <meta name="author" content="Jakub T. Jankiewicz" />
+    <link rel="canonical" href="https://jcubic.github.io/chat-gpt" />
+
+    <!-- Open Graph for social sharing -->
+    <meta property="og:title" content="ChatGPT Saving Bookmark" />
+    <meta property="og:description" content="A lightweight bookmarklet to save ChatGPT conversations as HTML files." />
+    <meta property="og:url" content="https://jcubic.github.io/chat-gpt" />
+    <meta property="og:image" content="https://jcubic.github.io/chat-gpt/assets/preview.png" />
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card meta -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ChatGPT Saving Bookmark" />
+    <meta name="twitter:description" content="Save your ChatGPT conversations as HTML with a simple bookmarklet." />
+    <meta name="twitter:image" content="https://jcubic.github.io/chat-gpt/assets/preview.png" />
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
 </head>
+
 <body>
-  <h1>ChatGPT saving Conversation <a href="https://en.wikipedia.org/wiki/Bookmarklet">Bookmarklet</a></h1>
-  <p>Drag this link to your bookmarks <a id="bookmark">Save ChatGPT</a></p>
-  <p>Below are few examples:</p>
-  <ul>
-    <li><a href="./2025-04-11/chat-gpt-scan-lan-for-fedora.html">Scan LAN for Fedora</a> (2025-04-11)</li>
-    <li><a href="./2025-03-16/chat-gpt-clear-ansi-term-emacs.html">Clear ansi-term Emacs</a> (2025-03-16)</li>
-    <li><a href="./2024-06-07/chat-gpt-define-git-alias-command.html">Define Git alias command</a> (2024-06-07)</li>
-    <li><a href="./2024-05-17/chat-gpt-http-server-with-npx.html">HTTP Server with npx</a> (2024-05-17)</li>
-    <li><a href="./2023-12-05/chat-gpt-cesar-cipher-in-javascript.html">Cesar Cipher in JavaScript</a> (2023-12-05)</li>
-    <li><a href="./2023-11-07/chat-gpt-app-ideas-for-react.html">App Ideas for React</a> (2023-11-07)</li>
-    <li><a href="./2023-08-18/chat-gpt-currency-analysis-symbols-distribution.html">Currency Analysis: Symbols & Distribution</a> (2023-08-18)</li>
-    <li><a href="./2023-08-17/chat-gpt-github-users-growth-plot.html">GitHub Users Growth Plot</a> (2023-08-17)</li>
-    <li><a href="./2023-04-26/chat-gpt-llm-explains-hallucinations.html">LLM explains hallucinations</a> (2023-04-26)</li>
-    <li><a href="./2023-04-12/chat-gpt-chatgpt-friendly-computer-helper.html">ChatGPT: Friendly computer helper</a> (2023-04-12)</li>
-    <li><a href="./2023-03/chat-gpt-kwisatz-haderach-and-riddles.html">Kwisatz Haderach and Riddles</a> (2023-03)</li>
-    <li><a href="./2022-12/what-is-programming.html">Explain what is programming like I'm 5</a> (2022-12)</li>
-  </ul>
-  <a href="https://github.com/jcubic/chat-gpt" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-  <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/terser.min.js"></script>
-  <script>
-   async function hash(branch) {
-       try {
-           var url = `https://api.github.com/repos/jcubic/chat-gpt/commits?sha=${branch}`;
-           var res = await fetch(url);
-           var data = await res.json();
-           return data[0].sha;
-       } catch (e) {
-           return branch;
-       }
-   }
-   async function format(code) {
-       code = code.replace(/^javascript:/, '');
-       var output = await terser.minify(code);
-       if (output.error) {
-           alert(output.error);
-       } else {
-           return 'javascript:' + escape(output.code);
-       }
-   }
-   function filename() {
-       const url = new URL(location.href);
-       return new URLSearchParams(url.search).get('file') ?? 'bookmark.js';
-   }
-   hash('master').then(hash => {
-       return fetch(`https://cdn.jsdelivr.net/gh/jcubic/chat-gpt@${hash}/${filename()}`);
-   }).then(res => res.text())
-     .then(format)
-     .then(code => bookmark.href = code);
-  </script>
-  <footer>
-    Copyright (C) 2022-2025 <a href="https://jakub.jankiewicz.org">Jakub T. Jankiewicz</a>
-  </footer>
+    <header class="hero-fullscreen">
+        <div class="hero-content">
+            <h1>ChatGPT Saving Bookmark</h1>
+            <p class="subtitle">A lightweight bookmarklet to save your ChatGPT conversations as HTML files.</p>
+            <img src="assets/down.png" alt="Scroll down" class="scroll-indicator" />
+        </div>
+
+
+    </header>
+
+    <div class="sticky-header">
+        <h1>ChatGPT Saving Bookmark</h1>
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="https://github.com/jcubic/chat-gpt" target="_blank" rel="noopener">GitHub</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main>
+        <section id="about">
+            <div class="container">
+                <h2>What is this?</h2>
+                <p>
+                    This is a small tool that lets you save ChatGPT conversations to your computer
+                    with a single click, using a JavaScript bookmarklet.
+                </p>
+                <p>
+                    Originally introduced in a <a href="https://dev.to/jcubic/save-chatgpt-as-html-file-dhh">DEV.to
+                        article</a>,
+                    it is now maintained on GitHub to ensure continued compatibility with changes in OpenAI's UI.
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <h2>Why does this exist?</h2>
+                <p>
+                    Since ChatGPT’s interface can change at any time, this tool uses a CDN-hosted script from GitHub.
+                    This keeps it working even when OpenAI updates their web UI.
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <h2>How do I use it?</h2>
+                <p>
+                    To run the code you need to create a new bookmark and copy the code from the JavaScript file.
+                </p>
+                <div class="button-like">
+                    <button class="copy-button" onclick="copyBookmarklet()">Copy Bookmarklet</button>
+                </div>
+                <textarea id="bookmarklet-code" readonly
+                    style="display: none; margin-top: 1rem; width: 100%; max-width: 700px; height: 120px;"></textarea>
+
+
+                <p>
+                    If you don't know how, you can drag & drop the
+                    <strong><a id="bookmark" href="#">Save ChatGPT</a></strong> link to your bookmarks.
+                </p>
+            </div>
+        </section>
+
+        <section id="examples">
+            <div class="container">
+                <h2>Examples</h2>
+                <p>See how others used the bookmarklet:</p>
+                <ul>
+                    <li>
+                      <a href="./2025-04-11/chat-gpt-scan-lan-for-fedora.html">Scan LAN for Fedora</a> (2025-04-11)
+                    </li>
+                    <li>
+                      <a href="./2025-03-16/chat-gpt-clear-ansi-term-emacs.html">Clear ansi-term Emacs</a> (2025-03-16)
+                    </li>
+                    <li>
+                      <a href="./2024-06-07/chat-gpt-define-git-alias-command.html">Define Git alias command</a> (2024-06-07)
+                    </li>
+                    <li>
+                      <a href="./2024-05-17/chat-gpt-http-server-with-npx.html">HTTP Server with npx</a> (2024-05-17)
+                    </li>
+                    <li>
+                      <a href="./2023-12-05/chat-gpt-cesar-cipher-in-javascript.html">Cesar Cipher in JavaScript</a> (2023-12-05)
+                    </li>
+                    <li>
+                      <a href="./2023-11-07/chat-gpt-app-ideas-for-react.html">App Ideas for React</a> (2023-11-07)
+                    </li>
+                    <li>
+                      <a href="./2023-08-18/chat-gpt-currency-analysis-symbols-distribution.html">Currency Analysis</a> (2023-08-18)
+                    </li>
+                    <li>
+                      <a href="./2023-08-17/chat-gpt-github-users-growth-plot.html">GitHub Users Growth</a> (2023-08-17)
+                    </li>
+                    <li>
+                      <a href="./2023-04-26/chat-gpt-llm-explains-hallucinations.html">LLM Hallucinations</a> (2023-04-26)
+                    </li>
+                    <li>
+                      <a href="./2023-04-12/chat-gpt-chatgpt-friendly-computer-helper.html">ChatGPT: Computer Helper</a> (2023-04-12)
+                    </li>
+                    <li>
+                      <a href="./2023-03/chat-gpt-kwisatz-haderach-and-riddles.html">Kwisatz Haderach</a> (2023-03)
+                    </li>
+                    <li>
+                      <a href="./2022-12/what-is-programming.html">What is programming?</a> (2022-12)
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2022–2025 <a href="https://jakub.jankiewicz.org">Jakub T. Jankiewicz</a></p>
+        <p>Website designed and developed by <a href="https://github.com/oumseyoung">Seyoung Oum</a></p>
+    </footer>
+
+    <a href="https://github.com/jcubic/chat-gpt" class="github-corner" aria-label="View source on GitHub">
+        <svg class="github-icon" viewBox="0 0 250 250" aria-hidden="true">
+            <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+            <path class="octo-arm" d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 
+                   C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 
+                   130.6,101.9 134.4,103.2" fill="currentColor">
+            </path>
+            <path class="octo-body" d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 
+                   139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 
+                   159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 
+                   C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 
+                   216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 
+                   198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 
+                   L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor">
+            </path>
+        </svg>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/terser.min.js"></script>
+    <script>
+        async function getBookmarkletCode() {
+            if (bookmark.href.startsWith('javascript:')) {
+                return bookmark.href;
+            }
+
+            const branch = 'master';
+            const filename = new URLSearchParams(location.search).get('file') ?? 'bookmark.js';
+
+            const commitRes = await fetch(`https://api.github.com/repos/jcubic/chat-gpt/commits?sha=${branch}`);
+            if (!commitRes.ok) throw new Error('Failed to fetch commit hash');
+            const commitData = await commitRes.json();
+            const hash = commitData[0].sha;
+
+            const codeRes = await fetch(`https://cdn.jsdelivr.net/gh/jcubic/chat-gpt@${hash}/${filename}`);
+            if (!codeRes.ok) throw new Error('Failed to fetch bookmarklet code');
+            const code = await codeRes.text();
+
+            const minified = await terser.minify(code.replace(/^javascript:/, ''));
+            if (minified.error) throw minified.error;
+
+            return 'javascript:' + escape(minified.code);
+        }
+
+        getBookmarkletCode()
+            .then(code => {
+                bookmark.href = code;
+            })
+            .catch(console.error);
+
+        async function copyBookmarklet() {
+            const textarea = document.getElementById('bookmarklet-code');
+
+            try {
+                const code = await getBookmarkletCode();
+
+                try {
+                    await navigator.clipboard.writeText(code);
+                    alert('✅ Bookmarklet copied to clipboard.\nNow create a bookmark and paste it there.');
+                    textarea.style.display = 'none';
+                } catch {
+                    textarea.value = code;
+                    textarea.style.display = 'block';
+                    textarea.focus();
+                    setTimeout(() => {
+                        textarea.select();
+                        alert('⚠️ Auto-copy is not supported.\nPlease copy manually using Ctrl/Cmd + C.');
+                    }, 100);
+                }
+
+            } catch (e) {
+                alert('❌ Failed to load the script.');
+                console.error(e);
+            }
+        }
+    </script>
+
 </body>
+
 </html>
