@@ -30,7 +30,8 @@ javascript:(async function() {
       }
     }
     template.innerHTML = dom.innerHTML;
-    ['.sr-only', 'img', 'svg', 'button', ':empty', '[role="button"]'].forEach(selector => {
+    ['.sr-only', 'img', 'svg', 'button', ':empty', '[role="button"]',
+     '.draggable:has([data-state] svg)'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
         if (!node.closest('.math') &&
             !is_avatar(node) &&
@@ -256,6 +257,9 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
 .p-1 {
   padding: 0.25rem;
 }
+.py-5 {
+  padding-block: 1rem;
+}
 .w-\\[30px\\] {
   width: 30px;
   min-width: 30px;
@@ -273,8 +277,10 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
   align-items: flex-end;
 }
 .py-\\[18px\\] {
-  padding-bottom: 18px;
-  padding-top: 18px;
+  padding-block: 18px;
+}
+.mx-auto {
+  margin-inline: auto;
 }
 .w-full {
   width: 100%;
@@ -282,6 +288,9 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
 /* code intepreter */
 body > header {
   transform: none !important;
+}
+code.whitespace-pre\\! {
+  white-space: pre !important;
 }
 .bg-gray-100 {
   background-color: rgba(236,236,241,1);
@@ -422,6 +431,9 @@ body > .w-full:nth-of-type(2n+1) .items-end {
 }
 .\\!whitespace-pre {
   white-space: pre!important;
+}
+.markdown pre {
+  margin-top: 0.5rem;
 }
 .overflow-y-auto {
   overflow-y: auto;
