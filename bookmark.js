@@ -73,10 +73,6 @@ javascript:(async function() {
   font-variation-settings: normal;
   tab-size: 4;
 }
-:host, :root {
-  --spacing: .25rem;
-  --font-weight-bold: 700;
-}
 body > .flex-col {
   max-width: 50rem;
   margin: 0 auto;
@@ -221,19 +217,17 @@ table {
   text-indent: 0;
 }
 .markdown li::marker {
-  --tw-font-weight: var(--font-weight-bold);
   color: var(--text-secondary);
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
 }
 .markdown blockquote {
-  --tw-leading: calc(var(--spacing) * 6);
   border-style: var(--tw-border-style);
   border-width: 0;
-  line-height: var(--tw-leading);
+  line-height: calc(.25rem * 6);
   margin: 0;
-  padding-block: calc(var(--spacing) * 2);
+  padding-block: calc(.25rem * 2);
   position: relative;
-  padding-left: var(--tw-leading);
+  padding-left: calc(.25rem * 6);
 }
 .markdown blockquote:after {
   background-color: var(--border-medium);
@@ -243,9 +237,8 @@ table {
   position: absolute;
   top: .5rem;
   width: 4px;
-  --tw-leading: calc(var(--spacing) * 6);
   border-width: 0;
-  line-height: var(--tw-leading);
+  line-height: calc(.25rem * 6);
   left: 0;
 }
 .prose :where(blockquote):not(:where([class~=not-prose] *)) {
@@ -255,9 +248,8 @@ table {
   border-left-color: oklch(37.3% .034 259.733);
 }
 .markdown blockquote > p {
-  --tw-font-weight: 400;
   font-weight: 400;
-  margin: calc(var(--spacing) * 0);
+  margin: calc(.25rem * 0);
 }
 .markdown p:not(:first-child) {
   margin-top: .5rem;
