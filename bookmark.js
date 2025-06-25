@@ -255,7 +255,6 @@ table {
 }
 
 .prose :where(blockquote):not(:where([class~=not-prose] *)) {
-    color: #fff;
     font-style: normal;
     font-weight: 500;
     quotes: "“" "”" "‘" "’";
