@@ -63,7 +63,7 @@ javascript:(async function() {
   <title>Chat GPT: ${title}</title>
   <meta name="generator" content="chatGPT Saving Bookmark"/>
 <style>
-*, ::backdrop :after, :before {
+*, ::backdrop, :after, :before {
   border: 0 solid #d9d9e3;
   box-sizing: border-box;
   margin: 0;
