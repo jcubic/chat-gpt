@@ -63,9 +63,15 @@ javascript:(async function() {
   <title>Chat GPT: ${title}</title>
   <meta name="generator" content="chatGPT Saving Bookmark"/>
 <style>
-*, :after, :before {
+*, ::backdrop, :after, :before {
   border: 0 solid #d9d9e3;
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+:host, html {
+  font-variation-settings: normal;
+  tab-size: 4;
 }
 body > .flex-col {
   max-width: 50rem;
@@ -209,6 +215,44 @@ table {
   border-collapse: collapse;
   border-color: inherit;
   text-indent: 0;
+}
+.markdown li::marker {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+.markdown blockquote {
+  border-style: var(--tw-border-style);
+  border-width: 0;
+  line-height: calc(.25rem * 6);
+  margin: 0;
+  padding-block: calc(.25rem * 2);
+  position: relative;
+  padding-left: calc(.25rem * 6);
+}
+.markdown blockquote:after {
+  background-color: var(--border-medium);
+  border-radius: 2px;
+  bottom: .5rem;
+  content: "";
+  position: absolute;
+  top: .5rem;
+  width: 4px;
+  border-width: 0;
+  line-height: calc(.25rem * 6);
+  left: 0;
+}
+.prose :where(blockquote):not(:where([class~=not-prose] *)) {
+  font-style: normal;
+  font-weight: 500;
+  quotes: "“" "”" "‘" "’";
+  border-left-color: oklch(37.3% .034 259.733);
+}
+.markdown blockquote > p {
+  font-weight: 400;
+  margin: calc(.25rem * 0);
+}
+.markdown p:not(:first-child) {
+  margin-top: .5rem;
 }
 .markdown table {
   --tw-border-spacing-x: 0px;
