@@ -77,16 +77,22 @@ body > .flex-col {
   max-width: 50rem;
   margin: 0 auto;
 }
+html {
+  color: var(--text-primary);
+  --theme-user-msg-bg: var(--message-surface);
+  --theme-user-msg-text: var(--text-primary);
+  --spacing: .25rem;
+}
 html.dark {
   background-color: rgb(32,33,35);
-  color: rgb(236,236,241);
+  --text-primary: rgb(236,236,241);
   --message-surface: rgba(50, 50, 50, .85);
   --sidebar-surface-primary: #171717;
   --border-medium: hsla(0, 0%, 100%, .15);
 }
 html.light {
   background-color: white;
-  color: rgb(52,53,65);
+  --text-primary: rgb(52,53,65);
   --message-surface: rgba(200, 200, 200, .85);
   --sidebar-surface-primary: #f9f9f9;
   --text-secondary: #5d5d5d;
@@ -328,6 +334,24 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
 }
 .w-full {
   width: 100%;
+}
+/* user question */
+.user-message-bubble-color {
+  max-width: 70%;
+  background-color: var(--theme-user-msg-bg);
+  color: var(--theme-user-msg-text);
+}
+.rounded-\\[18px\\] {
+    border-radius: 18px;
+}
+.data-[multiline]:py-3[data-multiline] {
+    padding-block: calc(var(--spacing) * 3);
+}
+.py-1\\.5 {
+    padding-block: calc(var(--spacing) * 1.5);
+}
+article:has([data-message-author-role="user"]) .justify-end {
+   height: 40px;
 }
 /* code intepreter */
 body > header {
