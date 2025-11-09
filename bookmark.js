@@ -4,7 +4,7 @@ javascript:(async function() {
     const selector = 'body > div.flex.h-full > div > div.flex.h-full > div.flex.h-full';
     const dom = document.querySelector(selector);
     const template = document.createElement('template');
-    const content_images = dom.querySelectorAll('[role="button"] img.w-full, button img.w-full');
+    const content_images = dom.querySelectorAll('[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1');
     const content_images_data = await get_content_images(content_images);
     const is_dark_mode = document.documentElement.matches('.dark');
     const title = document.querySelector('ol li a.bg-gray-100')?.textContent ?? document.title;
@@ -34,6 +34,7 @@ javascript:(async function() {
      '.draggable:has([data-state] svg)'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
         if (!node.closest('.math') &&
+            !node.matches('img.w-full.z-1') &&
             !is_avatar(node) &&
             !is_content_image(node) &&
             !is_upload_icon(node)) {
@@ -213,9 +214,6 @@ pre code.hljs {
 }
 .whitespace-pre-wrap {
   white-space: pre-wrap;
-}
-.flex-col {
-  flex-direction: column;
 }
 table {
   border-collapse: collapse;
@@ -530,6 +528,10 @@ body > .w-full:nth-of-type(2n+1) .items-end {
 #toggle:checked + label::before {
   content: "🌙";
 }
+/* overflow issue: https://stackoverflow.com/q/79815020/387194 */
+[role="presentation"] .flex.overflow-y-auto {
+  padding-block: 1px;
+}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"/>
 </head>
@@ -542,7 +544,7 @@ function decode(array) {
 }
 const content_images = ${arr_stringify(content_images_data)}.map(decode);
 document.querySelectorAll('img').forEach(img => {
-   if (img.matches('.empty\\\\:hidden > img')) {
+   if (img.matches('.empty\\\\:hidden > img, .group\\\\/imagegen-image img')) {
      const uri = content_images.shift();
      img.src = uri;
    }
@@ -628,13 +630,6 @@ toggle.addEventListener('change', () => {
       return `[${data}]`;
     });
     return `[${strings.join(',')}]`;
-  }
-  function get_src(image) {
-    const m = image.srcset.match(/(.*)\s+1x,\s*(.*)2x/);
-    return {
-      '1x': m[1],
-      '2x': m[2]
-    };
   }
   function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
