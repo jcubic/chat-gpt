@@ -1,9 +1,9 @@
-<center>
-  <a href="https://github.com/jcubic/chat-gpt" title="ChatGPT conversation saving bookmark">
-    <img src="https://github.com/jcubic/chat-gpt/blob/master/assets/chatgpt.svg?raw=true"
-         alt="Simplified icon that look like a classic bookmark with letter C inside"/>
-  </a>
-</center>
+<h1 align="center">
+  <img src="https://github.com/jcubic/chat-gpt/blob/master/assets/chatgpt.svg?raw=true"
+       alt="Simplified icon that look like a classic bookmark with letter C inside"/>
+</h1>
+
+[ChatGPT conversation saving bookmark](https://github.com/jcubic/chat-gpt)
 
 It's started as [DEV.to article](https://dev.to/jcubic/save-chatgpt-as-html-file-dhh).
 But I've decided that It would be better to track it on GitHub and update so it will still work,
