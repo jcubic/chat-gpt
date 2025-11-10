@@ -1,5 +1,7 @@
 <h1 align="center">
   <img src="https://github.com/jcubic/chat-gpt/blob/master/assets/chatgpt.svg?raw=true"
+       width="500"
+       height="350"
        alt="Simplified icon that look like a classic bookmark with letter C inside"/>
 </h1>
 
