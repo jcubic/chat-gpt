@@ -1,9 +1,16 @@
-# chatGPT Bookmark
-[ChatGPT conversation saving bookmark](https://github.com/jcubic/chat-gpt).
+<center>
+  <a href="https://github.com/jcubic/chat-gpt" title="ChatGPT conversation saving bookmark">
+    <img src="https://github.com/jcubic/chat-gpt/blob/master/assets/chatgpt.svg?raw=true"
+         alt="Simplified icon that look like a classic bookmark with letter C inside"/>
+  </a>
+</center>
 
 It's started as [DEV.to article](https://dev.to/jcubic/save-chatgpt-as-html-file-dhh).
 But I've decided that It would be better to track it on GitHub and update so it will still work,
 when OpenAI change their web application.
+
+## Respository
+* [jcubic/chat-gpt](https://github.com/jcubic/chat-gpt)
 
 ## What is Bookmarklet?
 Bookmarklet is a JavaScript code that run as URL from your bookmarks. To run the code you need to
