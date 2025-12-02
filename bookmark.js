@@ -2,16 +2,16 @@ javascript:(async function() {
   try {
     const CORS_PROXY = '__CORS_PROXY__';
 
-    // Helper: returns proxied URL for cross-origin images, original for same-origin
+    /* Helper: returns proxied URL for cross-origin images, original for same-origin */
     function proxyUrl(src) {
       try {
-        if (!/^https?:\/\//.test(src)) return src; // skip data:, blob:, relative URLs
+        if (!/^https?:\/\//.test(src)) return src; /* skip data:, blob:, relative URLs*/
         const srcOrigin = new URL(src).origin;
-        if (srcOrigin === location.origin) return src; // same-origin: no proxy needed
+        if (srcOrigin === location.origin) return src; /* same-origin: no proxy needed */
       } catch (e) {
         return src;
       }
-      if (!CORS_PROXY) return src; // proxy not configured
+      if (!CORS_PROXY) return src; /* proxy not configured */
       return CORS_PROXY.replace(/\/+$/, '') + '/' + encodeURIComponent(src);
     }
 
