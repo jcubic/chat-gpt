@@ -1,6 +1,6 @@
-javascript: (async function () {
+javascript:(async function() {
   try {
-    const CORS_PROXY = "__CORS_PROXY__";
+    const CORS_PROXY = '__CORS_PROXY__';
 
     // Helper: returns proxied URL for cross-origin images, original for same-origin
     function proxyUrl(src) {
@@ -12,38 +12,32 @@ javascript: (async function () {
         return src;
       }
       if (!CORS_PROXY) return src; // proxy not configured
-      return CORS_PROXY.replace(/\/+$/, "") + "/" + encodeURIComponent(src);
+      return CORS_PROXY.replace(/\/+$/, '') + '/' + encodeURIComponent(src);
     }
 
-    const a = document.createElement("a");
-    const selector =
-      "body > div.flex.h-full > div > div.flex.h-full > div.flex.h-full";
+    const a = document.createElement('a');
+    const selector = 'body > div.flex.h-full > div > div.flex.h-full > div.flex.h-full';
     const dom = document.querySelector(selector);
-    const template = document.createElement("template");
-    const content_images = dom.querySelectorAll(
-      '[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1'
-    );
+    const template = document.createElement('template');
+    const content_images = dom.querySelectorAll('[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1');
     const content_images_data = await get_content_images(content_images);
-    const is_dark_mode = document.documentElement.matches(".dark");
-    const title =
-      document.querySelector("ol li a.bg-gray-100")?.textContent ??
-      document.title;
+    const is_dark_mode = document.documentElement.matches('.dark');
+    const title = document.querySelector('ol li a.bg-gray-100')?.textContent ?? document.title;
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
     const trailing_dash_re = /(^-)|(-$)/g;
-    const slug = title
-      .toLowerCase()
+    const slug = title.toLowerCase()
       .replace(non_letters_re, "-")
-      .replace(trailing_dash_re, "");
+      .replace(trailing_dash_re, '');
     /* Show Python snippets from code interpreter */
-    const buttons = [...dom.querySelectorAll('[role="button"]')].map((node) => {
+    const buttons = [...dom.querySelectorAll('[role="button"]')].map(node => {
       const parent = node.parentNode;
-      if (node.textContent.trim() === "Show work") {
+      if (node.textContent.trim() === 'Show work') {
         node.click();
       }
       return parent;
     });
     while (true) {
-      const expanded = buttons.filter((node) => node.nextSibling);
+      const expanded = buttons.filter(node => node.nextSibling);
       if (expanded.length === buttons.length) {
         break;
       } else {
@@ -51,47 +45,35 @@ javascript: (async function () {
       }
     }
     template.innerHTML = dom.innerHTML;
-    [
-      ".sr-only",
-      "img",
-      "svg",
-      "button",
-      ":empty",
-      '[role="button"]',
-      ".draggable:has([data-state] svg)",
-    ].forEach((selector) => {
-      template.content.querySelectorAll(selector).forEach((node) => {
-        if (
-          !node.closest(".math") &&
-          !node.matches("img.w-full.z-1") &&
-          !is_avatar(node) &&
-          !is_content_image(node) &&
-          !is_upload_icon(node)
-        ) {
+    ['.sr-only', 'img', 'svg', 'button', ':empty', '[role="button"]',
+     '.draggable:has([data-state] svg)'].forEach(selector => {
+      template.content.querySelectorAll(selector).forEach(node => {
+        if (!node.closest('.math') &&
+            !node.matches('img.w-full.z-1') &&
+            !is_avatar(node) &&
+            !is_content_image(node) &&
+            !is_upload_icon(node)) {
           node.remove();
         }
       });
     });
-    const model = template.content.querySelector("div:first-child:not(.group)");
+    const model = template.content.querySelector('div:first-child:not(.group)');
     if (model) {
-      const newModel = document.createElement("span");
+      const newModel = document.createElement('span');
       newModel.className = model.className;
       newModel.innerHTML = model.innerHTML;
       model.replaceWith(newModel);
     }
-    template.content.querySelectorAll("img").forEach((node) => {
+    template.content.querySelectorAll('img').forEach(node => {
       if (is_avatar(node)) {
-        node.setAttribute("alt", "user avatar");
+        node.setAttribute('alt', 'user avatar');
       }
-      ["srcset", "style", "src"].forEach((attr) => {
+      ['srcset', 'style', 'src'].forEach(attr => {
         node.removeAttribute(attr);
       });
     });
-    a.href = URL.createObjectURL(
-      new Blob(
-        [
-          `<!DOCTYPE html>
-<html class="${is_dark_mode ? "dark" : "light"}">
+    a.href = URL.createObjectURL(new Blob([`<!DOCTYPE html>
+<html class="${is_dark_mode ? 'dark' : 'light'}">
 <head>
   <meta charset="utf-8"/>
   <title>Chat GPT: ${title}</title>
@@ -569,9 +551,7 @@ body > .w-full:nth-of-type(2n+1) .items-end {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"/>
 </head>
 <body>${template.innerHTML}
-<div class="toggle"><input id="toggle" type="checkbox"${
-            is_dark_mode ? " checked" : ""
-          } /><label for="toggle"></label></div>
+<div class="toggle"><input id="toggle" type="checkbox"${is_dark_mode ? ' checked' : ''} /><label for="toggle"></label></div>
 <script>
 function decode(array) {
   const ua = new Uint8Array(array);
@@ -588,46 +568,35 @@ toggle.addEventListener('change', () => {
     const className = toggle.checked ? 'dark' : 'light';
     document.documentElement.className = className;
 });
-</script></body></html>`,
-        ],
-        { type: "text/html" }
-      )
-    );
+</script></body></html>`], {type: 'text/html'}));
     a.download = `chat-gpt-${slug}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
-  } catch (e) {
+  } catch(e) {
     alert(e.message);
   }
   function is_avatar(node) {
-    return (
-      (node.matches(".items-end") &&
-        node.querySelector('svg[class*="icon"], img')) ||
-      node.closest("svg") ||
+    return (node.matches('.items-end') && node.querySelector('svg[class*="icon"], img')) ||
+      node.closest('svg') ||
       node.matches('svg[class*="icon"]') ||
       node.matches('img[alt*="@"]') ||
       node.matches('img[alt="User"]')
-    );
   }
   function is_content_image(node) {
-    return node.matches(".empty\\:hidden > img");
+    return node.matches('.empty\\:hidden > img');
   }
   function is_upload_icon(node) {
-    return node.matches(".group .bg-gray-500 svg");
+    return node.matches('.group .bg-gray-500 svg');
   }
   function canvas_to_array(canvas) {
-    return new Promise((resolve) => {
-      canvas.toBlob(
-        (blob) => {
-          blob.arrayBuffer().then((buffer) => {
-            resolve(new Uint8Array(buffer));
-          });
-        },
-        "image/jpeg",
-        0.95
-      );
+    return new Promise(resolve => {
+      canvas.toBlob(blob => {
+        blob.arrayBuffer().then(buffer => {
+          resolve(new Uint8Array(buffer));
+        });
+      }, "image/jpeg", 0.95);
     });
   }
   function render_image(image, ctx) {
@@ -636,43 +605,41 @@ toggle.addEventListener('change', () => {
     ctx.drawImage(image, 0, 0);
   }
   function render_image_uri(src, ctx) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const image = new Image();
-      image.onload = function () {
+      image.onload = function() {
         render_image(image, ctx);
         resolve();
       };
-      image.setAttribute("crossOrigin", "anonymous");
+      image.setAttribute('crossOrigin', 'anonymous');
       // Use proxyUrl() to route cross-origin images through CORS proxy
       image.src = proxyUrl(src);
     });
   }
   async function get_image_data(img) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
     await render_image_uri(img.src, ctx);
     return canvas_to_array(canvas);
   }
   async function get_content_images(imgs) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
 
-    return Promise.all(
-      Array.from(imgs).map(async (img) => {
-        // Use render_image_uri so cross-origin images route through proxyUrl()
-        const src = img.src || img.getAttribute("src");
-        await render_image_uri(src, ctx);
-        return canvas_to_array(canvas);
-      })
-    );
+    return Promise.all(Array.from(imgs).map(async img => {
+      // Use render_image_uri so cross-origin images route through proxyUrl()
+      const src = img.src || img.getAttribute('src');
+      await render_image_uri(src, ctx);
+      return canvas_to_array(canvas);
+    }));
   }
   function arr_stringify(arr) {
-    const strings = arr.map((data) => {
+    const strings = arr.map(data => {
       return `[${data}]`;
     });
-    return `[${strings.join(",")}]`;
+    return `[${strings.join(',')}]`;
   }
   function delay(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
+    return new Promise(resolve => setTimeout(resolve, time));
   }
 })();
