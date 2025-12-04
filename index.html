@@ -93,9 +93,9 @@
 
                 <!-- CORS proxy input (optional) -->
                 <div style="margin-top: 1.5rem; max-width: 700px;">
-                    <label for="corsProxy" style="display: block; margin-bottom: 0.5rem;">CORS Proxy URL (optional):</label>
-                    <input id="corsProxy" type="text" placeholder="http://localhost:8080" style="width: 100%; padding: 0.5rem; box-sizing: border-box;" />
-                    <button id="saveProxy" class="copy-button" style="margin-top: 0.5rem;">Save Proxy</button>
+                    <label for="cors-proxy" style="display: block; margin-bottom: 0.5rem;">CORS Proxy URL (optional):</label>
+                    <input id="cors-proxy" type="text" placeholder="http://localhost:8080" style="width: 100%; padding: 0.5rem; box-sizing: border-box;" />
+                    <button id="save-proxy" class="copy-button" style="margin-top: 0.5rem;">Save Proxy</button>
                     <p style="font-size: 0.9rem; color: #999; margin-top: 0.5rem;">Configure a self-hosted CORS proxy (e.g., cors-anywhere) to embed cross-origin images.</p>
                 </div>
 
@@ -208,7 +208,7 @@
 
             // Inject the saved CORS proxy URL by replacing the placeholder token
             const proxy = localStorage.getItem('cors_proxy') || '';
-            code = code.replace(/__CORS_PROXY__/g, JSON.stringify(proxy));
+            code = code.replace(/__CORS_PROXY__/g, proxy);
 
             const minified = await terser.minify(code.replace(/^javascript:/, ''));
             if (minified.error) throw minified.error;
@@ -224,8 +224,8 @@
 
         /* Load saved proxy URL and wire up save button */
         document.addEventListener('DOMContentLoaded', () => {
-            const corsInput = document.getElementById('corsProxy');
-            const saveBtn = document.getElementById('saveProxy');
+            const corsInput = document.getElementById('cors-proxy');
+            const saveBtn = document.getElementById('save-proxy');
             
             corsInput.value = localStorage.getItem('cors_proxy') || '';
             

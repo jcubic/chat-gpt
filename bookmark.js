@@ -1,9 +1,10 @@
 javascript:(async function() {
   try {
     const CORS_PROXY = '__CORS_PROXY__';
+    const PROXY = CORS_PROXY ? CORS_PROXY.replace(/\/+$/, '') + '/' : '';
 
     /* Helper: returns proxied URL for cross-origin images, original for same-origin */
-    function proxyUrl(src) {
+    function proxy_url(src) {
       try {
         if (!/^https?:\/\//.test(src)) return src; /* skip data:, blob:, relative URLs*/
         const srcOrigin = new URL(src).origin;
@@ -11,8 +12,7 @@ javascript:(async function() {
       } catch (e) {
         return src;
       }
-      if (!CORS_PROXY) return src; /* proxy not configured */
-      return CORS_PROXY.replace(/\/+$/, '') + '/' + encodeURIComponent(src);
+      return PROXY + encodeURIComponent(src);
     }
 
     const a = document.createElement('a');
