@@ -1,8 +1,8 @@
 javascript:(async function() {
   try {
     const a = document.createElement('a');
-    const selector = 'body > div.flex.h-full > div > div.flex.h-full > div.flex.h-full';
-    const dom = document.querySelector(selector);
+    const selector = 'main div:has(+ #thread-bottom-container) .flex.h-full';
+    const dom = document.querySelector(selector).cloneNode(true);
     const template = document.createElement('template');
     const content_images = dom.querySelectorAll('[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1');
     const content_images_data = await get_content_images(content_images);
@@ -34,6 +34,8 @@ javascript:(async function() {
      '.draggable:has([data-state] svg)'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
         if (!node.closest('.math') &&
+            !node.matches('[style*="aspect-ratio"]') &&
+            !node.matches('[style*="aspect-ratio"] img') &&
             !node.matches('img.w-full.z-1') &&
             !is_avatar(node) &&
             !is_content_image(node) &&
@@ -50,6 +52,9 @@ javascript:(async function() {
       model.replaceWith(newModel);
     }
     template.content.querySelectorAll('img').forEach(node => {
+      if (is_resource(node)) {
+        return;
+      }
       if (is_avatar(node)) {
         node.setAttribute('alt', 'user avatar');
       }
@@ -190,6 +195,24 @@ p:first-child {
   padding: 10px 20px;
   border-radius: 10px;
   max-width: 70%;
+}
+/* images */
+.object-cover {
+  object-fit: cover;
+}
+.flex:has(button.h-full img) {
+  gap: 0.5rem;
+}
+.w-32 button.h-full:has(img) {
+  overflow: hidden;
+  display: block;
+  height: 100%;
+}
+.w-32:has(button img) {
+  width: 14rem;
+  max-height: 16rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 /* response */
 .dark body > .w-full:nth-of-type(2n+2) {
@@ -538,15 +561,22 @@ body > .w-full:nth-of-type(2n+1) .items-end {
 <body>${template.innerHTML}
 <div class="toggle"><input id="toggle" type="checkbox"${is_dark_mode ? ' checked' : ''} /><label for="toggle"></label></div>
 <script>
-function decode(array) {
-  const ua = new Uint8Array(array);
+function decode(data) {
+  if (!data) {
+     return null;
+  }
+  const ua = new Uint8Array(data);
   return URL.createObjectURL(new Blob([ua], {type : "image/jpeg"}));
 }
 const content_images = ${arr_stringify(content_images_data)}.map(decode);
 document.querySelectorAll('img').forEach(img => {
    if (img.matches('.empty\\\\:hidden > img, .group\\\\/imagegen-image img')) {
      const uri = content_images.shift();
-     img.src = uri;
+     if (uri) {
+       img.src = uri;
+     } else {
+       img.style.display = 'none';
+     }
    }
 });
 toggle.addEventListener('change', () => {
@@ -562,12 +592,15 @@ toggle.addEventListener('change', () => {
   } catch(e) {
     alert(e.message);
   }
+  function is_resource(node) {
+    return node.matches('[style*="aspect-ratio"] img') && !node.src.match(/etsystatic.com/);
+  }
   function is_avatar(node) {
     return (node.matches('.items-end') && node.querySelector('svg[class*="icon"], img')) ||
       node.closest('svg') ||
       node.matches('svg[class*="icon"]') ||
       node.matches('img[alt*="@"]') ||
-      node.matches('img[alt="User"]')
+      node.matches('img[alt="User"]');
   }
   function is_content_image(node) {
     return node.matches('.empty\\:hidden > img');
@@ -576,8 +609,11 @@ toggle.addEventListener('change', () => {
     return node.matches('.group .bg-gray-500 svg');
   }
   function canvas_to_array(canvas) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       canvas.toBlob(blob => {
+        if (!blob) {
+          return reject();
+        }
         blob.arrayBuffer().then(buffer => {
           resolve(new Uint8Array(buffer));
         });
@@ -589,12 +625,23 @@ toggle.addEventListener('change', () => {
     ctx.canvas.height = image.naturalHeight;
     ctx.drawImage(image, 0, 0);
   }
+  function render_dummy(ctx) {
+    ctx.canvas.width = 100;
+    ctx.canvas.height = 100;
+    ctx.fillStyle = 'gray';
+    ctx.beginPath();
+    ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fill();
+  }
   function render_image_uri(src, ctx) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const image = new Image();
       image.onload = function() {
         render_image(image, ctx);
         resolve();
+      };
+      image.onerror = function() {
+        reject();
       };
       image.setAttribute('crossOrigin', 'anonymous');
       image.src = src;
@@ -610,24 +657,33 @@ toggle.addEventListener('change', () => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
-    return Promise.all(Array.from(imgs).map(async img => {
-      await new Promise(resolve => {
-        if (img.hasAttribute('crossOrigin')) {
-          return resolve();
-        }
-        img.addEventListener('load', function handler() {
-          img.removeEventListener('load', handler);
-          resolve();
+    return Promise.allSettled(Array.from(imgs).map(async img => {
+      try {
+        await new Promise((resolve, reject) => {
+          if (img.hasAttribute('crossOrigin')) {
+            return resolve();
+          }
+          img.addEventListener('load', function handler() {
+            resolve();
+          }, { once: true });
+          img.addEventListener('error', function handler() {
+            reject();
+          }, { once: true });
+          img.setAttribute('crossOrigin', 'anonymous');
         });
-        img.setAttribute('crossOrigin', 'anonymous');
-      });
-      render_image(img, ctx);
+        render_image(img, ctx);
+      } catch(e) {
+        render_dummy(ctx);
+      }
       return canvas_to_array(canvas);
     }));
   }
   function arr_stringify(arr) {
     const strings = arr.map(data => {
-      return `[${data}]`;
+      if (!data.value) {
+        return 'null';
+      }
+      return `[${data.value}]`;
     });
     return `[${strings.join(',')}]`;
   }
