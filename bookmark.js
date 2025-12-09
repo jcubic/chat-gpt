@@ -593,7 +593,7 @@ toggle.addEventListener('change', () => {
     alert(e.message);
   }
   function is_resource(node) {
-    return node.matches('[style*="aspect-ratio"] img') && !node.src.match(/etsystatic.com/);
+    return node.matches('[style*="aspect-ratio"] img');
   }
   function is_avatar(node) {
     return (node.matches('.items-end') && node.querySelector('svg[class*="icon"], img')) ||
