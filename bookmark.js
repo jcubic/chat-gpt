@@ -3,12 +3,11 @@ javascript:(async function() {
     const CORS_PROXY = '__CORS_PROXY__';
     const PROXY = CORS_PROXY ? CORS_PROXY.replace(/\/+$/, '') + '/' : '';
 
-    /* Helper: returns proxied URL for cross-origin images, original for same-origin */
     function proxy_url(src) {
       try {
-        if (!/^https?:\/\//.test(src)) return src; /* skip data:, blob:, relative URLs*/
+        if (!/^https?:\/\//.test(src)) return src;
         const srcOrigin = new URL(src).origin;
-        if (srcOrigin === location.origin) return src; /* same-origin: no proxy needed */
+        if (srcOrigin === location.origin) return src;
       } catch (e) {
         return src;
       }

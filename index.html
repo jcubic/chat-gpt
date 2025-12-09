@@ -222,14 +222,12 @@
             })
             .catch(console.error);
 
-        /* Load saved proxy URL and wire up save button */
         document.addEventListener('DOMContentLoaded', () => {
             const corsInput = document.getElementById('cors-proxy');
             const saveBtn = document.getElementById('save-proxy');
             
             corsInput.value = localStorage.getItem('cors_proxy') || '';
             
-            /* Save proxy when button clicked and regenerate bookmarklet */
             saveBtn.addEventListener('click', async () => {
                 localStorage.setItem('cors_proxy', corsInput.value.trim());
                 try {
