@@ -1,7 +1,7 @@
 javascript:(async function() {
   try {
     const a = document.createElement('a');
-    const selector = 'main div:has(+ #thread-bottom-container) .flex.h-full';
+    const selector = 'main div:has(+ #thread-bottom-container) div:has(article)';
     const dom = document.querySelector(selector).cloneNode(true);
     const template = document.createElement('template');
     const content_images = dom.querySelectorAll('[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1');
@@ -30,7 +30,7 @@ javascript:(async function() {
       }
     }
     template.innerHTML = dom.innerHTML;
-    ['.sr-only', 'img', 'svg', 'button', ':empty', '[role="button"]',
+    ['.sr-only', 'img', 'svg', 'button', ':empty', '[role="button"]', ':not(article):has(~ article)',
      '.draggable:has([data-state] svg)'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
         if (!node.closest('.math') &&
@@ -215,12 +215,6 @@ p:first-child {
   overflow: hidden;
 }
 /* response */
-.dark body > .w-full:nth-of-type(2n+2) {
-  background: rgb(68,70,84);
-}
-.light body > .w-full:nth-of-type(2n+2) {
-  background: rgb(247,247,248);
-}
 .light body > .w-full {
   border-bottom: 1px solid rgba(0,0,0,.1);
 }
