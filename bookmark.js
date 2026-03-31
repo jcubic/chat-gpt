@@ -1,7 +1,7 @@
 javascript:(async function() {
   try {
     const a = document.createElement('a');
-    const selector = 'main div:has(+ #thread-bottom-container) div:has(article)';
+    const selector = 'main div:has(+ #thread-bottom-container) div:has(section)';
     const dom = document.querySelector(selector).cloneNode(true);
     const template = document.createElement('template');
     const content_images = dom.querySelectorAll('[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1');
@@ -119,6 +119,9 @@ body > .w-full {
 .flex {
   display: flex;
   max-width: 100%;
+}
+.inline-flex {
+  display: inline-flex;
 }
 p:first-child {
   margin-top: 0;
@@ -350,6 +353,9 @@ code.hljs,code[class*=language-],pre[class*=language-]{word-wrap:normal;backgrou
 .w-full {
   width: 100%;
 }
+.rounded-\\[22px\\] {
+  border-radius: 22px;
+}
 /* user question */
 .user-message-bubble-color {
   max-width: 70%;
@@ -446,6 +452,29 @@ code.whitespace-pre\\! {
   font-size: 1rem;
   line-height: 1.75;
 }
+.prose :where(ul):not(:where([class~=not-prose],[class~=not-prose] *)) {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-inline-start: 1.625em;
+  list-style-type: disc;
+}
+/* source references */
+[data-state] a {
+  color: var(--text-secondary) !important;
+  font-size: 12px;
+  padding: calc(var(--spacing) * 2);
+  background-color: #303030 !important;
+  border-radius: .75rem;
+  max-width: 100% !important;
+  text-decoration: none;
+}
+[data-state] a:hover {
+  text-decoration: underline;
+}
+[data-state]:has(a[href]) [style*="width"] {
+  width: auto !important;
+  max-width: 100% !important;
+}
 /* user avatar don't have p tag with margin */
 body > .w-full:nth-of-type(2n+1) .items-end {
   margin-top: 0;
@@ -465,8 +494,10 @@ body > .w-full:nth-of-type(2n+1) .items-end {
   padding-top: 0.5rem;
 }
 .px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-inline: calc(var(--spacing) * 4);
+}
+.py-2\\.5 {
+  padding-block: calc(var(--spacing) * 2.5);
 }
 .text-xs {
   font-size: .75rem;
