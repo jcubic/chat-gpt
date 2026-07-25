@@ -31,6 +31,7 @@ javascript:(async function() {
       }
     }
     template.innerHTML = dom.innerHTML;
+    const symbols = await get_symbols(template.content);
     ['.sr-only', 'img', 'svg', 'button', ':empty', '[role="button"]', ':not(article):has(~ article)',
      '.draggable:has([data-state] svg)'].forEach(selector => {
       template.content.querySelectorAll(selector).forEach(node => {
@@ -63,7 +64,7 @@ javascript:(async function() {
         node.removeAttribute(attr);
       });
     });
-    document.querySelectorAll('svg use').forEach(node => {
+    template.content.querySelectorAll('svg use').forEach(node => {
       node.setAttribute('href', node.href.animVal.replace(/.+#/, '#'));
     });
     a.href = URL.createObjectURL(new Blob([`<!DOCTYPE html>
@@ -73,7 +74,7 @@ javascript:(async function() {
   <title>Chat GPT: ${title}</title>
   <meta name="generator" content="chatGPT Saving Bookmark"/>
 ${syntax_hl}
-${await get_symbols()}
+${symbols}
 <style>
 *, ::backdrop, :after, :before {
   border: 0 solid #d9d9e3;
@@ -721,8 +722,8 @@ toggle.addEventListener('change', () => {
       return canvas_to_array(canvas);
     }));
   }
-  async function get_symbols() {
-    const use = document.querySelector('svg use[href^="/cdn/"]');
+  async function get_symbols(dom) {
+    const use = dom.querySelector('svg use[href^="/cdn/"]');
     if (use) {
       const res = await fetch(use.href.baseVal);
       const data = await res.text();
