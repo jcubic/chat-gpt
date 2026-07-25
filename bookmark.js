@@ -181,7 +181,8 @@ p:first-child {
 /* code */
 .contents:has(code, svg use) {
   background: var(--message-surface);
-  padding: 0 0 0.5em 0.8em;
+  padding: 0 0 0.5em 1.2em;
+  border-radius: 22px;
 }
 .contents:has(code) div:has(> svg use) {
   gap: 0.5em;
