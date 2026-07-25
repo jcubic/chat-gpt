@@ -128,6 +128,12 @@ body > .w-full {
 h2, h3, h4 {
   margin-block: 0.5em;
 }
+.prose :where(ol):not(:where([class~=not-prose],[class~=not-prose] *)) {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-inline-start: 1.625em;
+  list-style-type: decimal;
+}
 .flex {
   display: flex;
   max-width: 100%;
