@@ -88,6 +88,8 @@ ${symbols}
 }
 /* syntax highlighting */
 :root{--green-25:#effaf3;--green-50:#def3e5;--green-75:#c2eace;--green-100:#9fddb1;--green-200:#83d197;--green-300:#6bc67f;--green-400:#53b559;--green-500:#48a04c;--green-600:#3a843f;--green-700:#2c6732;--green-800:#1f4e25;--green-900:#14361a;--green-1000:#041208;--green-a50:#04b84c26;--green-a75:#04b84c4a;--purple-25:#f8f5fd;--purple-50:#ede5fc;--purple-75:#ddcffa;--purple-100:#c9b1f6;--purple-200:#b897f4;--purple-300:#a67df2;--purple-400:#8952ee;--purple-500:#7849d1;--purple-600:#643cae;--purple-700:#4e2f88;--purple-800:#3b2366;--purple-900:#291947;--purple-1000:#0f0a18;--purple-a50:#924ff726;--purple-a75:#924ff747;--blue-25:#f6fafe;--blue-50:#e8f3fe;--blue-75:#d1e5fd;--blue-100:#a4cdfb;--blue-200:#63a8f8;--blue-300:#539af8;--blue-400:#3a83f7;--blue-500:#2c67c5;--blue-600:#1f4e94;--blue-700:#173e76;--blue-800:#133463;--blue-900:#0c274a;--blue-1000:#020d18;--blue-a50:#0285ff21;--blue-a75:#0285ff40;--orange-25:#fdf5f1;--orange-50:#fbe8db;--orange-75:#f7d1b8;--orange-100:#f4ba96;--orange-200:#f1a275;--orange-300:#ef8b57;--orange-400:#ee7c37;--orange-500:#d25e28;--orange-600:#ac4f23;--orange-700:#87401d;--orange-800:#653218;--orange-900:#45240d;--orange-1000:#1f1209;--orange-a50:#fb6a2229;--orange-a75:#fb6a2254;--red-25:#fff0f0;--red-50:#ffe1e0;--red-75:#ffc6c5;--red-100:#ffa4a2;--red-200:#ff8583;--red-300:#ff6764;--red-400:#fa423e;--red-500:#ff002a;--red-600:#ba2623;--red-700:#911e1b;--red-800:#6e1615;--red-900:#4d100e;--red-1000:#1f0909;--red-a50:#fa423e29;--red-a75:#fa423e4c;--pink-25:#fef8fb;--pink-50:#fdedf4;--pink-75:#fcd8e7;--pink-100:#fbbfd7;--pink-200:#f8a6c8;--pink-300:#f68ebc;--pink-400:#f077af;--pink-500:#cf6194;--pink-600:#ab4f7a;--pink-700:#873e60;--pink-800:#663049;--pink-900:#462132;--pink-1000:#1d0f15;--pink-a50:#ff66ad29;--pink-a75:#ff66ad47;--yellow-25:#fefbee;--yellow-50:#fdf6dc;--yellow-75:#fcefbe;--yellow-100:#fae598;--yellow-200:#f9dc78;--yellow-300:#f8d45d;--yellow-400:#f6c543;--yellow-500:#d9a337;--yellow-600:#b8802b;--yellow-700:#95611f;--yellow-800:#734615;--yellow-900:#51300c;--yellow-1000:#221403;--yellow-a50:#ffc30026;--yellow-a75:#ffc30045}
+/* gray pallete */
+:root{--white:#fff;--black:#000;--gray-0:#fff;--gray-25:#fcfcfc;--gray-50:#f9f9f9;--gray-75:#f2f2f2;--gray-100:#ececec;--gray-150:#e8e8e8;--gray-200:#e3e3e3;--gray-250:#d8d8d8;--gray-300:#cdcdcd;--gray-350:silver;--gray-400:#b4b4b4;--gray-450:#a8a8a8;--gray-500:#9b9b9b;--gray-550:#818181;--gray-600:#676767;--gray-650:#545454;--gray-700:#424242;--gray-750:#2f2f2f;--gray-800:#212121;--gray-850:#1c1c1c;--gray-900:#171717;--gray-925:#121212;--gray-950:#0d0d0d;--gray-975:#0c0c0c;--gray-1000:#0b0b0b;--brand-purple:#ab68ff}
 body > .flex-col {
   max-width: 50rem;
   margin: 0 auto;
@@ -402,6 +404,9 @@ article:has([data-message-author-role="user"]) .justify-end {
 /* code intepreter */
 body > header {
   transform: none !important;
+}
+.ͼs:has(pre) {
+  background: transparent !important;
 }
 code.whitespace-pre\\! {
   white-space: pre !important;
