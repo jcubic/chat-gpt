@@ -20,7 +20,7 @@ javascript:(async function() {
      * screenshot wrapper and both contain buttons (a reply with a code block
      * has its own copy / run buttons), so match only the one that does not
      * wrap a message. */
-    template.content.querySelectorAll('[data-conversation-screenshot-content] > div:has(button):not(:has([data-message-author-role]))').forEach(node => node.remove());
+    template.content.querySelectorAll('[data-conversation-screenshot-content] > div:has(button):not(:has([data-message-author-role])), pre div:has(> button), [class*="tableContainer"] span:has(>button)').forEach(node => node.remove());
     template.content.querySelectorAll('img').forEach(node => {
       if (is_resource(node) || is_icon(node)) {
         return;
