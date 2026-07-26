@@ -1,64 +1,24 @@
 javascript:(async function() {
   try {
     const a = document.createElement('a');
-    const selector = 'main div:has(+ #thread-bottom-container) div:has(section)';
-    const dom = document.querySelector(selector).cloneNode(true);
+    const dom = document.querySelector('div:has(> [data-turn-id-container])');
     const template = document.createElement('template');
-    const content_images = dom.querySelectorAll('[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1');
-    const content_images_data = await get_content_images(content_images);
     const is_dark_mode = document.documentElement.matches('.dark');
     const syntax_hl = document.querySelector('head > style')?.outerHTML ?? '';
-    const title = document.querySelector('ol li a.bg-gray-100')?.textContent ?? document.title;
+    const title = document.title;
     const non_letters_re = /[^\p{L}\p{N}]+/gu;
     const trailing_dash_re = /(^-)|(-$)/g;
     const slug = title.toLowerCase()
       .replace(non_letters_re, "-")
       .replace(trailing_dash_re, '');
-    /* Show Python snippets from code interpreter */
-    const buttons = [...dom.querySelectorAll('[role="button"]')].map(node => {
-      const parent = node.parentNode;
-      if (node.textContent.trim() === 'Show work') {
-        node.click();
-      }
-      return parent;
-    });
-    while (true) {
-      const expanded = buttons.filter(node => node.nextSibling);
-      if (expanded.length === buttons.length) {
-        break;
-      } else {
-        await delay(50);
-      }
-    }
-    template.innerHTML = dom.innerHTML;
+    template.content.append(await collect(dom));
+    const content_images = template.content.querySelectorAll('[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1');
+    const content_images_data = await get_content_images(content_images);
     const symbols = await get_symbols(template.content);
-    ['.sr-only', 'img', 'svg', 'button', ':empty', '[role="button"]', ':not(article):has(~ article)',
-     '.draggable:has([data-state] svg)'].forEach(selector => {
-      template.content.querySelectorAll(selector).forEach(node => {
-        if (!node.closest('.math') &&
-            !node.matches('[style*="aspect-ratio"]') &&
-            !node.matches('[style*="aspect-ratio"] img') &&
-            !node.matches('img.w-full.z-1') &&
-            !is_avatar(node) &&
-            !is_content_image(node) &&
-            !is_upload_icon(node)) {
-          node.remove();
-        }
-      });
-    });
-    const model = template.content.querySelector('div:first-child:not(.group)');
-    if (model) {
-      const newModel = document.createElement('span');
-      newModel.className = model.className;
-      newModel.innerHTML = model.innerHTML;
-      model.replaceWith(newModel);
-    }
+    template.content.querySelectorAll('[data-conversation-screenshot-content] > div:has(button)').forEach(node => node.remove());
     template.content.querySelectorAll('img').forEach(node => {
-      if (is_resource(node)) {
+      if (is_resource(node) || is_icon(node)) {
         return;
-      }
-      if (is_avatar(node)) {
-        node.setAttribute('alt', 'user avatar');
       }
       ['srcset', 'style', 'src'].forEach(attr => {
         node.removeAttribute(attr);
@@ -130,6 +90,9 @@ body > .w-full {
 h2, h3, h4 {
   margin-block: 0.5em;
 }
+main > [data-turn-id-container] {
+  margin-block: 2em;
+}
 .prose :where(ol):not(:where([class~=not-prose],[class~=not-prose] *)) {
   margin-top: 1.25em;
   margin-bottom: 1.25em;
@@ -177,6 +140,23 @@ p:first-child {
 }
 .h-8 {
   height: 2rem;
+}
+/* Screen reader */
+.sr-only {
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  position: absolute;
+  overflow: hidden;
+}
+.sr-only, .katex .katex-mathml {
+  contain: strict;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px;
 }
 /* code */
 .contents:has(code, svg use) {
@@ -230,6 +210,12 @@ p:first-child {
 /* images */
 .object-cover {
   object-fit: cover;
+}
+a:has([src^="http"]) span img {
+  height: 12px;
+  width: auto;
+  position: relative;
+  top: 2px;
 }
 .flex:has(button.h-full img) {
   gap: 0.5rem;
@@ -614,7 +600,8 @@ body > .w-full:nth-of-type(2n+1) .items-end {
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"/>
 </head>
-<body>${template.innerHTML}
+<body>
+<main>${template.innerHTML}</main>
 <div class="toggle"><input id="toggle" type="checkbox"${is_dark_mode ? ' checked' : ''} /><label for="toggle"></label></div>
 <script>
 function decode(data) {
@@ -626,7 +613,8 @@ function decode(data) {
 }
 const content_images = ${arr_stringify(content_images_data)}.map(decode);
 document.querySelectorAll('img').forEach(img => {
-   if (img.matches('.empty\\\\:hidden > img, .group\\\\/imagegen-image img')) {
+   if (img.matches('.empty\\\\:hidden > img, .group\\\\/imagegen-image img') &&
+       !img.matches('[src^="http"]')) {
      const uri = content_images.shift();
      if (uri) {
        img.src = uri;
@@ -651,12 +639,8 @@ toggle.addEventListener('change', () => {
   function is_resource(node) {
     return node.matches('[style*="aspect-ratio"] img');
   }
-  function is_avatar(node) {
-    return (node.matches('.items-end') && node.querySelector('svg[class*="icon"], img')) ||
-      node.closest('svg') ||
-      node.matches('svg[class*="icon"]') ||
-      node.matches('img[alt*="@"]') ||
-      node.matches('img[alt="User"]');
+  function is_icon(node) {
+    return node.matches('[src^="http"]');
   }
   function is_content_image(node) {
     return node.matches('.empty\\:hidden > img');
@@ -754,5 +738,87 @@ toggle.addEventListener('change', () => {
   }
   function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
+  }
+  function collect(root) {
+    const scroller = document.querySelector('[data-scroll-root]');
+
+    if (!root || !scroller) {
+      throw new Error('Required elements not found');
+    }
+
+    const originalScrollTop = scroller.scrollTop;
+
+    const outer_containers = () =>
+      root.querySelectorAll(':scope > [data-turn-id-container]');
+
+    const clones = new Map();
+
+    const grab = () => {
+      for (const container of outer_containers()) {
+        const id = container.getAttribute('data-turn-id-container');
+        if (clones.has(id)) {
+          continue;
+        }
+        if (container.matches(':has([data-turn-id]:not(:empty))')) {
+          clones.set(id, container.cloneNode(true));
+        }
+      }
+    };
+
+    const step = Math.round(scroller.clientHeight * 0.3);
+    const timeout = 120;
+
+    return (async () => {
+      try {
+        scroller.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+
+        await delay(timeout * 2);
+        grab();
+
+        while (true) {
+          const maxScroll =
+                scroller.scrollHeight -
+                scroller.clientHeight;
+
+          if (scroller.scrollTop >= maxScroll) {
+            break;
+          }
+
+          scroller.scrollBy({
+            top: step,
+            behavior: 'instant'
+          });
+
+          await delay(timeout);
+          grab();
+        }
+
+        await delay(timeout);
+        grab();
+      } finally {
+        scroller.scrollTo({
+          top: originalScrollTop,
+          behavior: 'instant'
+        });
+      }
+
+      /* Rebuild in document order: the outer placeholders keep their order even
+       * after their content has been virtualized away again.
+       */
+      const fragment = document.createDocumentFragment();
+      for (const container of outer_containers()) {
+        const clone = clones.get(container.getAttribute('data-turn-id-container'));
+        if (clone) {
+          fragment.appendChild(clone);
+        }
+      }
+
+      console.log(`${fragment.childElementCount} turns collected`);
+
+      return fragment;
+    })();
   }
 })();
