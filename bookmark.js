@@ -758,13 +758,44 @@ toggle.addEventListener('change', () => {
 
     const clones = new Map();
 
+    /*
+     * Inline citation links (a.decorated-link) get their href hydrated into the
+     * DOM lazily by ChatGPT (sometimes only on hover), but the URL is available
+     * straight away on the React fiber props. Read it from there so we don't
+     * clone a link with a missing href.
+     */
+    const react_href = el => {
+      const key = Object.keys(el).find(k => k.startsWith('__reactFiber$'));
+      let fiber = key ? el[key] : null;
+      let depth = 0;
+      while (fiber && depth < 5) {
+        const props = fiber.memoizedProps;
+        if (props && typeof props.href === 'string') {
+          return props.href;
+        }
+        fiber = fiber.return;
+        depth++;
+      }
+      return null;
+    };
+
+    const hydrate_links = container => {
+      for (const link of container.querySelectorAll('a[class~="decorated-link"]:not([href])')) {
+        const href = react_href(link);
+        if (href) {
+          link.setAttribute('href', href);
+        }
+      }
+    };
+
     const grab = () => {
       for (const container of outer_containers()) {
         const id = container.getAttribute('data-turn-id-container');
         if (clones.has(id)) {
           continue;
         }
-        if (container.matches(':has([data-turn-id]:not(:empty))')) {
+        if (container.matches(':has([data-turn-id]:not(:empty)):has([data-message-author-role])')) {
+          hydrate_links(container);
           clones.set(id, container.cloneNode(true));
         }
       }
@@ -810,7 +841,8 @@ toggle.addEventListener('change', () => {
         });
       }
 
-      /* Rebuild in document order: the outer placeholders keep their order even
+      /*
+       * Rebuild in document order: the outer placeholders keep their order even
        * after their content has been virtualized away again.
        */
       const fragment = document.createDocumentFragment();
