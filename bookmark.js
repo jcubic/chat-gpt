@@ -15,7 +15,12 @@ javascript:(async function() {
     const content_images = template.content.querySelectorAll('[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1');
     const content_images_data = await get_content_images(content_images);
     const symbols = await get_symbols(template.content);
-    template.content.querySelectorAll('[data-conversation-screenshot-content] > div:has(button)').forEach(node => node.remove());
+    /* Remove the per-turn action toolbar (copy / good / bad / share buttons)
+     * without dropping the message body. Both are direct-child divs of the
+     * screenshot wrapper and both contain buttons (a reply with a code block
+     * has its own copy / run buttons), so match only the one that does not
+     * wrap a message. */
+    template.content.querySelectorAll('[data-conversation-screenshot-content] > div:has(button):not(:has([data-message-author-role]))').forEach(node => node.remove());
     template.content.querySelectorAll('img').forEach(node => {
       if (is_resource(node) || is_icon(node)) {
         return;
