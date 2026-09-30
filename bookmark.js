@@ -12,17 +12,31 @@ javascript:(async function() {
       .replace(non_letters_re, "-")
       .replace(trailing_dash_re, '');
     template.content.append(await collect(dom));
-    const content_images = template.content.querySelectorAll('[role="button"] img.w-full, button img.w-full, .group\\/imagegen-image img.w-full.z-1');
+    /* A generated image is rendered three times: the image itself plus a
+     * blurred backdrop and a mask overlay, both absolutely positioned on top
+     * of it. Only the image is worth saving. */
+    template.content.querySelectorAll('[class*="imagegen-image"] .absolute > img').forEach(node => node.remove());
+    const content_images = template.content.querySelectorAll('img[alt]:not([alt=""])');
     const content_images_data = await get_content_images(content_images);
     const symbols = await get_symbols(template.content);
     /* Remove the per-turn action toolbar (copy / good / bad / share buttons)
      * without dropping the message body. Both are direct-child divs of the
      * screenshot wrapper and both contain buttons (a reply with a code block
      * has its own copy / run buttons), so match only the one that does not
-     * wrap a message. */
-    template.content.querySelectorAll('[data-conversation-screenshot-content] > div:has(button):not(:has([data-message-author-role])), pre div:has(> button), [class*="tableContainer"] span:has(>button)').forEach(node => node.remove());
+     * wrap a message. A generated image is a message body with a download
+     * button and no [data-message-author-role], so it needs the extra img
+     * guard to survive. */
+    template.content.querySelectorAll('[data-conversation-screenshot-content] > div:has(button):not(:has([data-message-author-role], img)), pre div:has(> button), [class*="tableContainer"] span:has(>button)').forEach(node => node.remove());
+    /* Images we could not read (e.g. a search thumbnail served without CORS
+     * headers) keep pointing at their original URL, the rest have the src
+     * dropped and get it back from the inlined data at runtime. */
+    template.content.querySelectorAll('img[data-image-index]').forEach(node => {
+      if (!content_images_data[node.getAttribute('data-image-index')]?.value) {
+        node.removeAttribute('data-image-index');
+      }
+    });
     template.content.querySelectorAll('img').forEach(node => {
-      if (is_resource(node) || is_icon(node)) {
+      if (!node.hasAttribute('data-image-index') && (is_resource(node) || is_icon(node))) {
         return;
       }
       ['srcset', 'style', 'src'].forEach(attr => {
@@ -215,6 +229,17 @@ p:first-child {
 /* images */
 .object-cover {
   object-fit: cover;
+}
+/* generated images, without the Tailwind utilities that position them */
+.group\\/imagegen-image {
+  max-width: 30rem;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.group\\/imagegen-image img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 a:has([src^="http"]) span img {
   height: 12px;
@@ -617,15 +642,12 @@ function decode(data) {
   return URL.createObjectURL(new Blob([ua], {type : "image/jpeg"}));
 }
 const content_images = ${arr_stringify(content_images_data)}.map(decode);
-document.querySelectorAll('img').forEach(img => {
-   if (img.matches('.empty\\\\:hidden > img, .group\\\\/imagegen-image img') &&
-       !img.matches('[src^="http"]')) {
-     const uri = content_images.shift();
-     if (uri) {
-       img.src = uri;
-     } else {
-       img.style.display = 'none';
-     }
+document.querySelectorAll('img[data-image-index]').forEach(img => {
+   const uri = content_images[img.getAttribute('data-image-index')];
+   if (uri) {
+     img.src = uri;
+   } else {
+     img.style.display = 'none';
    }
 });
 toggle.addEventListener('change', () => {
@@ -670,58 +692,59 @@ toggle.addEventListener('change', () => {
     ctx.canvas.height = image.naturalHeight;
     ctx.drawImage(image, 0, 0);
   }
-  function render_dummy(ctx) {
-    ctx.canvas.width = 100;
-    ctx.canvas.height = 100;
-    ctx.fillStyle = 'gray';
-    ctx.beginPath();
-    ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fill();
-  }
   function render_image_uri(src, ctx) {
+    const image_timeout = 15000;
     return new Promise((resolve, reject) => {
       const image = new Image();
+      const timer = setTimeout(() => {
+        image.src = '';
+        reject(new Error(`Timeout while loading ${src}`));
+      }, image_timeout);
       image.onload = function() {
+        clearTimeout(timer);
         render_image(image, ctx);
         resolve();
       };
       image.onerror = function() {
-        reject();
+        clearTimeout(timer);
+        reject(new Error(`Unable to load ${src}`));
       };
       image.setAttribute('crossOrigin', 'anonymous');
       image.src = src;
     });
   }
-  async function get_image_data(img) {
+  async function get_image_data(src) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    await render_image_uri(img.src, ctx);
+    await render_image_uri(src, ctx);
     return canvas_to_array(canvas);
   }
+  function image_url(img) {
+    const src = img.getAttribute('src');
+    /* the template document has no URL of its own, so relative sources need to
+     * be resolved against the page */
+    return src ? new URL(src, document.baseURI).href : null;
+  }
+  /* The images are inside a <template>, i.e. in a document with no browsing
+   * context, where they are never fetched and never fire load or error. Load
+   * every source again in the main document instead. Each source is fetched
+   * once and the images that share it share a single entry: ChatGPT renders a
+   * generated image three times (blurred backdrop, the image, an overlay). */
   async function get_content_images(imgs) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    return Promise.allSettled(Array.from(imgs).map(async img => {
-      try {
-        await new Promise((resolve, reject) => {
-          if (img.hasAttribute('crossOrigin')) {
-            return resolve();
-          }
-          img.addEventListener('load', function handler() {
-            resolve();
-          }, { once: true });
-          img.addEventListener('error', function handler() {
-            reject();
-          }, { once: true });
-          img.setAttribute('crossOrigin', 'anonymous');
-        });
-        render_image(img, ctx);
-      } catch(e) {
-        render_dummy(ctx);
+    const sources = [];
+    const indexes = new Map();
+    for (const img of imgs) {
+      const src = image_url(img);
+      if (!src) {
+        continue;
       }
-      return canvas_to_array(canvas);
-    }));
+      if (!indexes.has(src)) {
+        indexes.set(src, sources.length);
+        sources.push(src);
+      }
+      img.setAttribute('data-image-index', indexes.get(src));
+    }
+    return Promise.allSettled(sources.map(get_image_data));
   }
   async function get_symbols(dom) {
     const use = dom.querySelector('svg use[href^="/cdn/"]');
@@ -794,7 +817,7 @@ toggle.addEventListener('change', () => {
         if (clones.has(id)) {
           continue;
         }
-        if (container.matches(':has([data-turn-id]:not(:empty)):has([data-message-author-role])')) {
+        if (container.matches(':has([data-turn-id]:not(:empty))')) {
           hydrate_links(container);
           clones.set(id, container.cloneNode(true));
         }
@@ -814,14 +837,17 @@ toggle.addEventListener('change', () => {
         await delay(timeout * 2);
         grab();
 
+        let prevScroll;
+
         while (true) {
           const maxScroll =
                 scroller.scrollHeight -
                 scroller.clientHeight;
 
-          if (scroller.scrollTop >= maxScroll) {
+          if (scroller.scrollTop >= maxScroll || prevScroll === scroller.scrollTop) {
             break;
           }
+          prevScroll = scroller.scrollTop;
 
           scroller.scrollBy({
             top: step,
