@@ -1,7 +1,8 @@
 javascript:(async function() {
   try {
     const a = document.createElement('a');
-    const dom = document.querySelector('div:has(> [data-turn-id-container])');
+    const turn_attr = find_turn_attr();
+    const dom = find_turn_container(turn_attr);
     const template = document.createElement('template');
     const is_dark_mode = document.documentElement.matches('.dark');
     const syntax_hl = document.querySelector('head > style')?.outerHTML ?? '';
@@ -11,11 +12,11 @@ javascript:(async function() {
     const slug = title.toLowerCase()
       .replace(non_letters_re, "-")
       .replace(trailing_dash_re, '');
-    template.content.append(await collect(dom));
+    template.content.append(await collect(dom, turn_attr));
     /* A generated image is rendered three times: the image itself plus a
      * blurred backdrop and a mask overlay, both absolutely positioned on top
      * of it. Only the image is worth saving. */
-    template.content.querySelectorAll('[class*="imagegen-image"] .absolute > img').forEach(node => node.remove());
+    template.content.querySelectorAll('[class*="imagegen-image"] .absolute > img, .turn-action-controls, [class*="group/generated-image-gallery-controls"] button:has(img) ~ div, [class^="CodeBlock-"] [data-markdown-copy="exclude"], [class^="InlineCodePane"] + button').forEach(node => node.remove());
     const content_images = template.content.querySelectorAll('img[alt]:not([alt=""])');
     const content_images_data = await get_content_images(content_images);
     const symbols = await get_symbols(template.content);
@@ -103,13 +104,13 @@ body {
   line-height: 28px;
   margin: 0;
 }
-body > .w-full {
-  padding: 30px;
+body > svg {
+  height: 1px;
 }
 h2, h3, h4 {
   margin-block: 0.5em;
 }
-main > [data-turn-id-container] {
+main > [${turn_attr}], main > :has([${turn_attr}]) {
   margin-block: 2em;
 }
 .prose :where(ol):not(:where([class~=not-prose],[class~=not-prose] *)) {
@@ -177,6 +178,22 @@ p:first-child {
   content-visibility: auto;
   contain-intrinsic-size: 1px;
 }
+img {
+  max-width: 100%;
+  height: auto;
+}
+button:has(img) {
+  border-radius: 10px;
+  overflow: hidden;
+}
+main {
+  max-width: 900px;
+  margin: auto;
+}
+ul[class^="List-"] {
+  padding-inline-start: 2em;
+  margin-block: 0.5em;
+}
 /* code */
 .contents:has(code, svg use) {
   background: var(--message-surface);
@@ -220,11 +237,15 @@ p:first-child {
   border-color: var(--border-medium);
 }
 /* prompt */
-.bg-token-message-surface {
+.bg-token-message-surface, [data-user-message-bubble="true"] {
   background-color: var(--message-surface);
   padding: 10px 20px;
   border-radius: 10px;
   max-width: 70%;
+}
+[class^="CodeBlock-"] {
+  background-color: var(--message-surface);
+  border-radius: 10px;
 }
 /* images */
 .object-cover {
@@ -767,17 +788,98 @@ toggle.addEventListener('change', () => {
   function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
   }
-  function collect(root) {
-    const scroller = document.querySelector('[data-scroll-root]');
-
-    if (!root || !scroller) {
+  /*
+   * ChatGPT renames the attribute that marks a conversation turn from time to
+   * time, and different builds of the app are served side by side, so look for
+   * whichever naming the current page uses instead of hardcoding one.
+   */
+  function find_turn_attr() {
+    return [
+      'data-turn-id-container',
+      'data-turn-key',
+      'data-virtualized-turn-content'
+    ].find(attr => document.querySelector(`[${attr}]`));
+  }
+  /*
+   * The wrapper the turns are listed in. Usually they are its direct children,
+   * but a build that gives every turn its own virtualization wrapper leaves no
+   * parent holding more than one, and then the closest ancestor holding all of
+   * them is the list.
+   */
+  function find_turn_container(turn_attr) {
+    if (!turn_attr) {
+      return null;
+    }
+    const turns = [...document.querySelectorAll(`[${turn_attr}]`)];
+    if (!turns.length) {
+      return null;
+    }
+    const counts = new Map();
+    for (const turn of turns) {
+      const parent = turn.parentElement;
+      if (parent) {
+        counts.set(parent, (counts.get(parent) ?? 0) + 1);
+      }
+    }
+    let container = null;
+    let max = 0;
+    for (const [parent, count] of counts) {
+      if (count > max) {
+        container = parent;
+        max = count;
+      }
+    }
+    if (max > 1 || turns.length === 1) {
+      return container;
+    }
+    let ancestor = turns[0].parentElement;
+    while (ancestor && !turns.every(turn => ancestor.contains(turn))) {
+      ancestor = ancestor.parentElement;
+    }
+    return ancestor;
+  }
+  /* The turns scroll inside their nearest scrollable ancestor. */
+  function find_scroller(node) {
+    for (let el = node; el; el = el.parentElement) {
+      const overflow = getComputedStyle(el).overflowY;
+      if ((overflow === 'auto' || overflow === 'scroll') &&
+          el.scrollHeight > el.clientHeight + 1) {
+        return el;
+      }
+    }
+    return document.scrollingElement;
+  }
+  /*
+   * A turn scrolled out of view is virtualized down to an empty placeholder.
+   * Anything carrying text or media is real content worth cloning.
+   */
+  function is_hydrated(container) {
+    return container.textContent.trim() !== '' ||
+      container.querySelector('img, svg, canvas, video') !== null;
+  }
+  function collect(root, turn_attr) {
+    if (!root || !turn_attr) {
       throw new Error('Required elements not found');
     }
 
+    const scroller = find_scroller(root);
+
     const originalScrollTop = scroller.scrollTop;
 
+    /* Each child of the list is one turn, either tagged itself or wrapping the
+     * tagged node. Re-read it every time: virtualization swaps these nodes. */
     const outer_containers = () =>
-      root.querySelectorAll(':scope > [data-turn-id-container]');
+      [...root.children].filter(el => el.matches(`[${turn_attr}]`) ||
+                                el.querySelector(`[${turn_attr}]`));
+
+    const turn_id = container => {
+      const tagged = container.matches(`[${turn_attr}]`)
+            ? container
+            : container.querySelector(`[${turn_attr}]`);
+      /* Fall back to the node itself when the attribute carries no value, so
+       * turns cannot collide on a shared empty key. */
+      return tagged?.getAttribute(turn_attr) || container;
+    };
 
     const clones = new Map();
 
@@ -813,11 +915,11 @@ toggle.addEventListener('change', () => {
 
     const grab = () => {
       for (const container of outer_containers()) {
-        const id = container.getAttribute('data-turn-id-container');
+        const id = turn_id(container);
         if (clones.has(id)) {
           continue;
         }
-        if (container.matches(':has([data-turn-id]:not(:empty))')) {
+        if (is_hydrated(container)) {
           hydrate_links(container);
           clones.set(id, container.cloneNode(true));
         }
@@ -873,7 +975,7 @@ toggle.addEventListener('change', () => {
        */
       const fragment = document.createDocumentFragment();
       for (const container of outer_containers()) {
-        const clone = clones.get(container.getAttribute('data-turn-id-container'));
+        const clone = clones.get(turn_id(container));
         if (clone) {
           fragment.appendChild(clone);
         }
